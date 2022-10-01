@@ -1,0 +1,515 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e32b1bc70e398d64baf90a8a6e4ae3ed, type: 3}
+  m_Name: Agent Database
+  m_EditorClassIdentifier: 
+  AllAgents:
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Poser
+    OriginIcon: {fileID: 21300000, guid: 06823b49a1fcd154da0942a436195adb, type: 3}
+    AgentOrigin: Trickster
+    ClassIcon: {fileID: 21300000, guid: 1a7d8d92597c14148ba14377ca88b60d, type: 3}
+    AgentClass: Intellect
+    AgentCost: 1
+    AgentNumber: 0
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Blep
+    OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+    AgentOrigin: Beastling
+    ClassIcon: {fileID: 21300000, guid: fa2077f29659ea042b6a6d4073a1e799, type: 3}
+    AgentClass: Scout
+    AgentCost: 1
+    AgentNumber: 1
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Nostin
+    OriginIcon: {fileID: 21300000, guid: 062eeb9d5e8ba8f45a9ddfea52518f82, type: 3}
+    AgentOrigin: Rebel
+    ClassIcon: {fileID: 21300000, guid: ed8ef41e0593c444f89985400bb18768, type: 3}
+    AgentClass: Contender
+    AgentCost: 1
+    AgentNumber: 2
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Kennef
+    OriginIcon: {fileID: 21300000, guid: 06823b49a1fcd154da0942a436195adb, type: 3}
+    AgentOrigin: Trickster
+    ClassIcon: {fileID: 21300000, guid: 8066e15c4e3df6e4f9806f9d5f71e70a, type: 3}
+    AgentClass: Slayer
+    AgentCost: 1
+    AgentNumber: 3
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Glitch
+    OriginIcon: {fileID: 21300000, guid: 93af7b787a2d66e468add73213a37970, type: 3}
+    AgentOrigin: Bot
+    ClassIcon: {fileID: 21300000, guid: 772f522a9c782904e9d220a7f8690c6c, type: 3}
+    AgentClass: Counselor
+    AgentCost: 1
+    AgentNumber: 4
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #5
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 5
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #6
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 6
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #7
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 7
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #8
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 8
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #9
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 9
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #10
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 10
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #11
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 1
+    AgentNumber: 11
+    BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Jojo
+    OriginIcon: {fileID: 21300000, guid: dba0c48d5a7e35f4bb87f2e8b57499d0, type: 3}
+    AgentOrigin: Dignitary
+    ClassIcon: {fileID: 21300000, guid: 1a7d8d92597c14148ba14377ca88b60d, type: 3}
+    AgentClass: Intellect
+    AgentCost: 2
+    AgentNumber: 12
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Big Steve
+    OriginIcon: {fileID: 21300000, guid: 0d6fe719ca1a6304b86fd5a8d517fa48, type: 3}
+    AgentOrigin: Visionaire
+    ClassIcon: {fileID: 21300000, guid: 772f522a9c782904e9d220a7f8690c6c, type: 3}
+    AgentClass: Counselor
+    AgentCost: 2
+    AgentNumber: 13
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Iam
+    OriginIcon: {fileID: 21300000, guid: dba0c48d5a7e35f4bb87f2e8b57499d0, type: 3}
+    AgentOrigin: Dignitary
+    ClassIcon: {fileID: 21300000, guid: 01f37c4d7431f454297eadac8750d509, type: 3}
+    AgentClass: Overseer
+    AgentCost: 2
+    AgentNumber: 14
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Skippy
+    OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+    AgentOrigin: Beastling
+    ClassIcon: {fileID: 21300000, guid: 798a0192e5e2a1c45a1f6786703af909, type: 3}
+    AgentClass: Sorcerer
+    AgentCost: 2
+    AgentNumber: 15
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Nomad
+    OriginIcon: {fileID: 21300000, guid: 57a57e5de7a11a945a125ef4383fe3e1, type: 3}
+    AgentOrigin: Suzerain
+    ClassIcon: {fileID: 21300000, guid: fa2077f29659ea042b6a6d4073a1e799, type: 3}
+    AgentClass: Scout
+    AgentCost: 2
+    AgentNumber: 16
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #17
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 2
+    AgentNumber: 17
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #18
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 2
+    AgentNumber: 18
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #19
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 2
+    AgentNumber: 19
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #20
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 2
+    AgentNumber: 20
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #21
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 2
+    AgentNumber: 21
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Clover
+    OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+    AgentOrigin: Beastling
+    ClassIcon: {fileID: 21300000, guid: ed8ef41e0593c444f89985400bb18768, type: 3}
+    AgentClass: Contender
+    AgentCost: 2
+    AgentNumber: 22
+    BackgroundColor: {r: 0.27450982, g: 0.9019608, b: 0.39215687, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Waffles
+    OriginIcon: {fileID: 21300000, guid: ae7785f19cc193a4d9ab24c58d63be2e, type: 3}
+    AgentOrigin: Behemoth
+    ClassIcon: {fileID: 21300000, guid: 01f37c4d7431f454297eadac8750d509, type: 3}
+    AgentClass: Overseer
+    AgentCost: 3
+    AgentNumber: 23
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Shadow
+    OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+    AgentOrigin: Beastling
+    ClassIcon: {fileID: 21300000, guid: 8066e15c4e3df6e4f9806f9d5f71e70a, type: 3}
+    AgentClass: Slayer
+    AgentCost: 3
+    AgentNumber: 24
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Dax
+    OriginIcon: {fileID: 21300000, guid: 57a57e5de7a11a945a125ef4383fe3e1, type: 3}
+    AgentOrigin: Suzerain
+    ClassIcon: {fileID: 21300000, guid: ed8ef41e0593c444f89985400bb18768, type: 3}
+    AgentClass: Contender
+    AgentCost: 3
+    AgentNumber: 25
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Shmi
+    OriginIcon: {fileID: 21300000, guid: 434b9ec91260129489414ae404c6e3fc, type: 3}
+    AgentOrigin: Druid
+    ClassIcon: {fileID: 21300000, guid: 798a0192e5e2a1c45a1f6786703af909, type: 3}
+    AgentClass: Sorcerer
+    AgentCost: 3
+    AgentNumber: 26
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #27
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 27
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #28
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 28
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #29
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 29
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #30
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 30
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #31
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 31
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #32
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 3
+    AgentNumber: 32
+    BackgroundColor: {r: 0.29411766, g: 0.37254903, b: 0.92156863, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Melty
+    OriginIcon: {fileID: 21300000, guid: 434b9ec91260129489414ae404c6e3fc, type: 3}
+    AgentOrigin: Druid
+    ClassIcon: {fileID: 21300000, guid: 25180e46342b2214a9d68d0f0ce01ca5, type: 3}
+    AgentClass: Sniper
+    AgentCost: 4
+    AgentNumber: 33
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Pebbles
+    OriginIcon: {fileID: 21300000, guid: ae7785f19cc193a4d9ab24c58d63be2e, type: 3}
+    AgentOrigin: Behemoth
+    ClassIcon: {fileID: 21300000, guid: 2820b2e4880bb924da42e15982d02033, type: 3}
+    AgentClass: Thug
+    AgentCost: 4
+    AgentNumber: 34
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Mod
+    OriginIcon: {fileID: 21300000, guid: afcc21aaa520e9743b7c6ddd2ee73409, type: 3}
+    AgentOrigin: Extrovert
+    ClassIcon: {fileID: 21300000, guid: 2820b2e4880bb924da42e15982d02033, type: 3}
+    AgentClass: Thug
+    AgentCost: 4
+    AgentNumber: 35
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Mitch
+    OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
+    AgentOrigin: Beastling
+    ClassIcon: {fileID: 21300000, guid: e128b01dab70e7a498a78577123c2db0, type: 3}
+    AgentClass: Paladin
+    AgentCost: 4
+    AgentNumber: 36
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #37
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 4
+    AgentNumber: 37
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #38
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 4
+    AgentNumber: 38
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #39
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 4
+    AgentNumber: 39
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #40
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 4
+    AgentNumber: 40
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #41
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 4
+    AgentNumber: 41
+    BackgroundColor: {r: 0.7058824, g: 0.33333334, b: 1, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Whiskers
+    OriginIcon: {fileID: 21300000, guid: ae7785f19cc193a4d9ab24c58d63be2e, type: 3}
+    AgentOrigin: Behemoth
+    ClassIcon: {fileID: 21300000, guid: e128b01dab70e7a498a78577123c2db0, type: 3}
+    AgentClass: Paladin
+    AgentCost: 5
+    AgentNumber: 42
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Dom
+    OriginIcon: {fileID: 21300000, guid: 325d33c6d266f0e448f60efb34dde7b1, type: 3}
+    AgentOrigin: Introvert
+    ClassIcon: {fileID: 21300000, guid: 25180e46342b2214a9d68d0f0ce01ca5, type: 3}
+    AgentClass: Sniper
+    AgentCost: 5
+    AgentNumber: 43
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #44
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 5
+    AgentNumber: 44
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #45
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 5
+    AgentNumber: 45
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #46
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 5
+    AgentNumber: 46
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #47
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 5
+    AgentNumber: 47
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: Agent #48
+    OriginIcon: {fileID: 0}
+    AgentOrigin: 
+    ClassIcon: {fileID: 0}
+    AgentClass: 
+    AgentCost: 5
+    AgentNumber: 48
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
+  - AgentPrefab: {fileID: 2656853323642630276, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+    AgentIcon: {fileID: 0}
+    AgentName: "Dam\xF3n"
+    OriginIcon: {fileID: 21300000, guid: 0d6fe719ca1a6304b86fd5a8d517fa48, type: 3}
+    AgentOrigin: Visionaire
+    ClassIcon: {fileID: 21300000, guid: ed8ef41e0593c444f89985400bb18768, type: 3}
+    AgentClass: Contender
+    AgentCost: 5
+    AgentNumber: 49
+    BackgroundColor: {r: 0.92156863, g: 0.74509805, b: 0.09803922, a: 1}
