@@ -12,6 +12,7 @@ internal class PlayerControl : MonoBehaviour {
     
     protected Rigidbody PlayerRb;
     protected NavMeshAgent NavMeshAgent;
+    protected Animator PlayerAnimator;
 
     private Vector3 _playerPosition;
     private Vector3 _targetPosition;
@@ -25,6 +26,7 @@ internal class PlayerControl : MonoBehaviour {
     private void Start() {
         PlayerRb = GetComponent<Rigidbody>();
         NavMeshAgent = GetComponent<NavMeshAgent>();
+        PlayerAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -40,7 +42,6 @@ internal class PlayerControl : MonoBehaviour {
         // Get target position player is to move to (right-click input)
         else if (Input.GetMouseButtonDown(_rightClick)) {
             _targetPosition = PlayerManager.Instance.GetMousePosition();
-            //Debug.Log(_targetPosition);
             _movePlayer = true;
         }
 
@@ -54,6 +55,7 @@ internal class PlayerControl : MonoBehaviour {
         const float tolerance = 0.0001f;
         
         NavMeshAgent.destination = target;
+        PlayerAnimator.SetFloat("Speed", NavMeshAgent.velocity.magnitude);
 
         if (Math.Abs(_playerPosition.x - target.x) < tolerance && Math.Abs(_playerPosition.z - target.z) < tolerance)
             _movePlayer = false;

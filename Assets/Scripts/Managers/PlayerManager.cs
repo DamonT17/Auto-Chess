@@ -102,12 +102,14 @@ public class PlayerManager : Manager<PlayerManager> {
     // Level up the Player
     public void LevelUp() {
         if (CanPlayerLevelUp()) {
+            Player.GetComponent<Animator>().SetTrigger("CanPlayerLevelUp");
+
             PlayerXP -= _xpPerLevel[PlayerLevel];   // Reset XP to modulus for next level
             PlayerLevel++;                          // Increase level
             GameManager.Instance.TeamSize = PlayerLevel;
 
             // Check if player is at max level
-            if (!CanPlayerLevelUp()) {
+            if (PlayerLevel == _maxLevel) {
                 _playerSlider.GetComponentInChildren<TextMeshProUGUI>().text = $"{PlayerLevel}";
                 GameManager.Instance.AllowedAgentsText.text =
                     $"{GameManager.Instance.CurrentTeamSize}/{GameManager.Instance.TeamSize}";

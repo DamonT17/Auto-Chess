@@ -85,7 +85,7 @@ public class GameManager : Manager<GameManager> {
         if (IsGameActive) {
             SetGameState(GameStatePrep);   // Initialize game state
 
-            //StartCoroutine(Timer(TimerLength[GetGameState()]));
+            StartCoroutine(Timer(TimerLength[GetGameState()]));
         }
     }
 
@@ -98,25 +98,29 @@ public class GameManager : Manager<GameManager> {
                 case GameStateCarousel:
                     SetGameState(GameStatePrep);
                     AllowedAgentsText.gameObject.SetActive(true);
+                    PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case GameStatePrep:
                     SetGameState(GameStateFight);
                     AllowedAgentsText.gameObject.SetActive(false);
+                    PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", true);
                     break;
 
                 case GameStateFight:
                     SetGameState(GameStateBuffer);
                     AllowedAgentsText.gameObject.SetActive(false);
+                    PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case GameStateBuffer:
                     SetGameState(GameStatePrep);
                     AllowedAgentsText.gameObject.SetActive(true);
+                    PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
             }
 
-            //StartCoroutine(Timer(TimerLength[GetGameState()]));
+            StartCoroutine(Timer(TimerLength[GetGameState()]));
         }
     }
 
