@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// Class for setting up the environment's graphs
+// Class for setting up the environment's graph data structures
 public class Graph {
     // ENCAPSULATION
     public List<Node> Nodes { get; }
@@ -85,7 +85,7 @@ public class Graph {
             unvisitedNodes = unvisitedNodes.OrderBy(node => nodeDistances[node]).ToList();
 
             // Get node with smallest 'cost' and remove from unvisitedNodes list (starting node)
-            Node currentNode = unvisitedNodes[0];
+            var currentNode = unvisitedNodes[0];
             unvisitedNodes.Remove(currentNode);
 
             // Return nodePath when currentNode equals endNode
@@ -104,8 +104,8 @@ public class Graph {
             var neighborNodes = NeighborNodes(currentNode);
 
             foreach (var neighborNode in neighborNodes) {
-                float length = Vector3.Distance(currentNode.WorldPosition, neighborNode.WorldPosition);
-                float alt = nodeDistances[currentNode] + length;    // ?????
+                var length = Vector3.Distance(currentNode.WorldPosition, neighborNode.WorldPosition);
+                var alt = nodeDistances[currentNode] + length;
 
                 if (alt < nodeDistances[neighborNode]) {
                     nodeDistances[neighborNode] = alt;
@@ -117,7 +117,7 @@ public class Graph {
         return nodePath;
     }
 
-    // Class for setting up the environment's nodes
+    // Class for setting up the graph's nodes
     public class Node {
         public int Index;
 
@@ -138,7 +138,7 @@ public class Graph {
             IsOccupied = false;
         }
 
-        // Sets node to occupied when Agent is "over" it
+        // Sets node to occupied when Agent is "over" node
         public void SetOccupied(bool val) {
             IsOccupied = val;
         }
@@ -159,10 +159,7 @@ public class Graph {
 
         // Value of constant for determining paths between nodes
         public float GetWeight() {
-            if (To.IsOccupied)
-                return Mathf.Infinity;
-
-            return _weight;
+            return To.IsOccupied ? Mathf.Infinity : _weight;
         }
     }
 }

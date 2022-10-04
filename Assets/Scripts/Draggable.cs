@@ -40,7 +40,7 @@ public class Draggable : MonoBehaviour {
         }
     }
 
-    // On Agent release, reset tile color
+    // On Agent release, reset origin tile color
     public void OnRelease() {
         if (Input.GetMouseButtonUp(_leftClick)) {
             if (_originTile != null) {
@@ -52,11 +52,26 @@ public class Draggable : MonoBehaviour {
     
     // On Agent StartDrag event, show board Tiles
     public void OnStartDrag() {
-        foreach (Tile tile in GridManager.Instance.MyTiles)
+        foreach (var tile in GridManager.Instance.MyTiles)
             tile.SetAlpha(1f);
 
-        foreach (Tile tile in GridManager.Instance.MyBenchTiles)
+        foreach (var tile in GridManager.Instance.MyBenchTiles)
             tile.SetAlpha(0.588f);
+
+
+        // Test loops for enemy tiles and bench to disallow player from placing Agent
+        foreach (var tile in GridManager.Instance.EnemyTiles) {
+            tile.SetHighlightColor(_invalid);
+            tile.SetAlpha(1f);
+        }
+
+        foreach (var tile in GridManager.Instance.EnemyBenchTiles) {
+            tile.SetHighlightColor(_invalid);
+            tile.SetAlpha(0.588f);
+        }
+
+        GridManager.Instance.CenterTile.SetHighlightColor(_invalid);
+        GridManager.Instance.CenterTile.SetAlpha(1f);
 
         IsDragging = true;
         PlayerManager.Instance.SelectedAgent = this.gameObject;
@@ -69,45 +84,49 @@ public class Draggable : MonoBehaviour {
 
         // Need interaction with shop UI for selling Agents
 
-        Vector3 newPosition = PlayerManager.Instance.GetMousePosition() + DragOffset;
+        var newPosition = PlayerManager.Instance.GetMousePosition() + DragOffset;
         this.transform.position = newPosition;
 
-        Tile tileUnder = GetTileUnder();
+        var tile = GetTileUnder();
 
-        if (tileUnder != null) {
-            string parentName = tileUnder.transform.parent.name;
+        if (tile != null) {
+            var parentName = tile.transform.parent.name;
 
             switch (parentName) {
                 case "Battle Grid":
-                    // Logic for "full" team on battlefield
-                    if (GameManager.Instance.CurrentTeamSize == GameManager.Instance.TeamSize) {
-                        // Check if Agent's origin was on Battle Grid
-                        if (this.transform.parent.parent.name == parentName) {
-                            tileUnder.SetHighlightColor(_valid);
+                    // Check if tile is part of MyTiles list
+                    if (GridManager.Instance.MyTiles.Contains(tile)) {
+                        // Logic for "full" team on battlefield
+                        if (GameManager.Instance.CurrentTeamSize == GameManager.Instance.TeamSize) {
+                            // Check if Agent's origin was on Battle Grid
+                            if (this.transform.parent.parent.name == parentName) {
+                                tile.SetHighlightColor(_valid);
+                            }
+                            else {
+                                tile.SetHighlightColor(
+                                    !GridManager.Instance.GetNodeForTile(tile).IsOccupied ? _invalid : _valid);
+                            }
                         }
                         else {
-                            tileUnder.SetHighlightColor(
-                                !GridManager.Instance.GetNodeForTile(tileUnder).IsOccupied ? _invalid : _valid);
+                            tile.SetHighlightColor(_valid);
                         }
                     }
-                    else {
-                        tileUnder.SetHighlightColor(_valid);
-                    }
-                    
+
                     break;
                 case "Player Agents":
-                    tileUnder.SetHighlightColor(_valid);
+                    tile.SetHighlightColor(_valid);
                     break;
                 case "Enemy Agents":    // Do not want to allow player to place agents on enemy bench
-                    tileUnder.SetHighlightColor(_invalid);
+                    tile.SetHighlightColor(_invalid);
                     break;
             }
             
-            if (_previousTile != null && tileUnder != _previousTile) {
+            if (_previousTile != null && tile != _previousTile) {
                 _previousTile.SetHighlightColor(_previousTile == _originTile ? _origin : _default);
             }
 
-            _previousTile = tileUnder;
+            if(GridManager.Instance.MyTiles.Contains(tile) || GridManager.Instance.MyBenchTiles.Contains(tile))
+                _previousTile = tile;
         }
         else {
             if(_previousTile != null)
@@ -128,11 +147,19 @@ public class Draggable : MonoBehaviour {
             _previousTile = null;
         }
 
-        foreach (Tile tile in GridManager.Instance.MyTiles)
+        foreach (var tile in GridManager.Instance.MyTiles)
             tile.SetAlpha(0f);
 
-        foreach (Tile tile in GridManager.Instance.MyBenchTiles)
+        foreach (var tile in GridManager.Instance.MyBenchTiles)
             tile.SetAlpha(0f);
+
+        foreach (var tile in GridManager.Instance.EnemyTiles)
+            tile.SetAlpha(0f);
+
+        foreach (var tile in GridManager.Instance.EnemyBenchTiles)
+            tile.SetAlpha(0f);
+
+        GridManager.Instance.CenterTile.SetAlpha(0f);
 
         IsDragging = false;
         PlayerManager.Instance.SelectedAgent = null;
@@ -185,14 +212,14 @@ public class Draggable : MonoBehaviour {
     // Obtain the tile underneath the Agent
     public Tile GetTileUnder() {
         if (!IsDragging) {
-            Tile tile = this.gameObject.transform.parent.gameObject.GetComponent<Tile>();
+            var tile = this.gameObject.transform.parent.gameObject.GetComponent<Tile>();
             return tile;
         }
         else {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out var hit)) {
-                Tile tile = hit.collider.GetComponent<Tile>();
+                var tile = hit.collider.GetComponent<Tile>();
                 return tile;
             }
 

@@ -8,8 +8,8 @@ using UnityEngine;
 public class GridManager : Manager<GridManager> {
     // Assignables
     public Transform BattleGrid;
-    public Transform TeamBench;
-    public Transform EnemyTeamBench;
+    public Transform MyBench;
+    public Transform EnemyBench;
 
     // Variables
     public Graph Graph;
@@ -17,10 +17,10 @@ public class GridManager : Manager<GridManager> {
     public Graph EnemyBenchGraph;
     protected Dictionary<GameManager.Team, int> StartPositionPerTeam;
 
-    [SerializeField] private int fromIndex = 0;
-    [SerializeField] private int toIndex = 0;
+    [SerializeField] private int _fromIndex = 0;
+    [SerializeField] private int _toIndex = 0;
 
-    private List<Tile> _allBattleTiles = new List<Tile>();
+    private List<Tile> _allTiles = new List<Tile>();
     public List<Tile> MyTiles = new List<Tile>();
     public List<Tile> EnemyTiles = new List<Tile>();
     public Tile CenterTile;
@@ -32,19 +32,16 @@ public class GridManager : Manager<GridManager> {
     protected new void Awake() {
         base.Awake();
 
-        _allBattleTiles = BattleGrid.GetComponentsInChildren<Tile>().ToList();
-        MyBenchTiles = TeamBench.GetComponentsInChildren<Tile>().ToList();
-        EnemyBenchTiles = EnemyTeamBench.GetComponentsInChildren<Tile>().ToList();
+        SetupTiles();
 
         InitializeGraph();
         InitializeBench(MyBenchTiles, ref BenchGraph);
         InitializeBench(EnemyBenchTiles, ref EnemyBenchGraph);
 
-        SetupTiles();
-
-        StartPositionPerTeam = new Dictionary<GameManager.Team, int>();
-        StartPositionPerTeam.Add(GameManager.Team.Team1, 0);
-        StartPositionPerTeam.Add(GameManager.Team.Team2, _allBattleTiles.Count - 1);
+        StartPositionPerTeam = new Dictionary<GameManager.Team, int> {
+            {GameManager.Team.Team1, 0},
+            {GameManager.Team.Team2, _allTiles.Count - 1}
+        };
     }
 
     // ABSTRACTION
@@ -52,15 +49,15 @@ public class GridManager : Manager<GridManager> {
     private void InitializeGraph() {
         Graph = new Graph();
 
-        foreach (var t in _allBattleTiles) {
+        foreach (var t in _allTiles) {
             var parentTransform = t.transform;
             Graph.AddNode(parentTransform);
         }
 
         var allNodes = Graph.Nodes;
 
-        foreach (Graph.Node from in allNodes) {
-            foreach (Graph.Node to in allNodes) {
+        foreach (var from in allNodes) {
+            foreach (var to in allNodes) {
                 if (Vector3.Distance(from.WorldPosition, to.WorldPosition) <= 1f && from != to)
                     Graph.AddEdge(from, to);
             }
@@ -81,25 +78,24 @@ public class GridManager : Manager<GridManager> {
     // ABSTRACTION
     // Initialization of all tiles in environment
     private void SetupTiles() {
-        foreach (Tile tile in _allBattleTiles)
-            tile.SetAlpha(0f);
+        // Initialization of battlefield tiles
+        _allTiles = BattleGrid.GetComponentsInChildren<Tile>().ToList();
+        MyTiles = _allTiles.GetRange(0, _allTiles.Count / 2);
+        EnemyTiles = _allTiles.GetRange((_allTiles.Count / 2) + 1, _allTiles.Count / 2);
+        CenterTile = _allTiles[30];
 
-        foreach (Tile tile in MyBenchTiles)
-            tile.SetAlpha(0f);
+        // Initialization of bench tiles
+        MyBenchTiles = MyBench.GetComponentsInChildren<Tile>().ToList();
+        EnemyBenchTiles = EnemyBench.GetComponentsInChildren<Tile>().ToList();
 
-        foreach (Tile tile in EnemyBenchTiles) {
-            tile.SetAlpha(0f);
-            tile.gameObject.SetActive(false);
-        }
+        foreach (var t in _allTiles)
+            t.SetAlpha(0f);
 
-        MyTiles.AddRange(_allBattleTiles.GetRange(0, 30));
-        EnemyTiles.AddRange(_allBattleTiles.GetRange(31, 30));
-        CenterTile = _allBattleTiles[30];   // Midpoint of all battle tiles
+        foreach (var t in MyBenchTiles)
+            t.SetAlpha(0f);
 
-        foreach (Tile tile in EnemyTiles)
-            tile.gameObject.SetActive(false);
-
-        CenterTile.gameObject.SetActive(false);
+        foreach (var t in EnemyBenchTiles)
+            t.SetAlpha(0f);
     }
 
     // ABSTRACTION
@@ -192,7 +188,7 @@ public class GridManager : Manager<GridManager> {
         if (allBenchNodes == null)
             return;
 
-        foreach (Graph.Node n in allBenchNodes) {
+        foreach (var n in allBenchNodes) {
             Gizmos.color = n.IsOccupied ? Color.red : Color.green;
             Gizmos.DrawSphere(n.WorldPosition, 0.2f);
         }
@@ -203,7 +199,7 @@ public class GridManager : Manager<GridManager> {
         if (allEnemyBenchNodes == null)
             return;
 
-        foreach (Graph.Node n in allEnemyBenchNodes) {
+        foreach (var n in allEnemyBenchNodes) {
             Gizmos.color = n.IsOccupied ? Color.red : Color.green;
             Gizmos.DrawSphere(n.WorldPosition, 0.2f);
         }
@@ -214,7 +210,7 @@ public class GridManager : Manager<GridManager> {
         if (allNodes == null)
             return;
 
-        foreach (Graph.Node n in allNodes) {
+        foreach (var n in allNodes) {
             Gizmos.color = n.IsOccupied ? Color.red : Color.green;
             Gizmos.DrawSphere(n.WorldPosition, 0.2f);
         }
@@ -224,17 +220,17 @@ public class GridManager : Manager<GridManager> {
         if (allEdges == null)
             return;
 
-        foreach (Graph.Edge e in allEdges) {
+        foreach (var e in allEdges)
             Debug.DrawLine(e.From.WorldPosition, e.To.WorldPosition, Color.magenta, 100);
-        }
-        
-        if (fromIndex >= allNodes.Count || toIndex >= allNodes.Count)   // Do not draw path if indices out of range
+
+        if (_fromIndex >= allNodes.Count || _toIndex >= allNodes.Count)   // Do not draw path if indices out of range
             return;
 
         // Test feature for GetShortestPath algorithm
-        List<Graph.Node> path = GetNodePath(allNodes[fromIndex], allNodes[toIndex]);
+        var path = GetNodePath(allNodes[_fromIndex], allNodes[_toIndex]);
+
         if (path.Count > 1) {
-            for(int i = 1; i < path.Count; i++)
+            for(var i = 1; i < path.Count; i++)
                 Debug.DrawLine(path[i-1].WorldPosition, path[i].WorldPosition, Color.red, 10);
         }
     }

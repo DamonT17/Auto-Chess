@@ -216,9 +216,6 @@ public class GameManager : Manager<GameManager> {
     // ABSTRACTION
     // Debug method for generating enemies to fight
     public void DebugBuild() {
-        foreach (Tile tile in GridManager.Instance.EnemyTiles)
-            tile.gameObject.SetActive(true);
-
         for (var i = 0; i < PlayerManager.Instance.PlayerLevel; i++) {
             int randomIndex = UnityEngine.Random.Range(0, AgentDatabase.AllAgents.Count);
             Agent agent = Instantiate(AgentDatabase.AllAgents[randomIndex].AgentPrefab);

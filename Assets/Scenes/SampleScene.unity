@@ -5880,10 +5880,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BattleGrid: {fileID: 2104602970}
-  TeamBench: {fileID: 1937334921143505531}
-  EnemyTeamBench: {fileID: 1937334921143505532}
-  fromIndex: 0
-  toIndex: 0
+  MyBench: {fileID: 1937334921143505531}
+  EnemyBench: {fileID: 1937334921143505532}
+  _fromIndex: 0
+  _toIndex: 0
   MyTiles: []
   EnemyTiles: []
   CenterTile: {fileID: 0}

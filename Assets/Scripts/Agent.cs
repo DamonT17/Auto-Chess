@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 // Base class for all Agents
 public class Agent : MonoBehaviour {
-    protected GameManager.Team MyTeam;
+    public GameManager.Team Team;
     protected Agent CurrentTarget;
     protected Graph.Node currentNode;
     
@@ -44,7 +45,7 @@ public class Agent : MonoBehaviour {
     // ABSTRACTION
     // Initialization of Agent for Player's team
     public void Setup(GameManager.Team team, Graph.Node node) {
-        MyTeam = team;
+        Team = team;
 
         this.currentNode = node;
         node.SetOccupied(true);
@@ -53,15 +54,19 @@ public class Agent : MonoBehaviour {
 
         if(team == GameManager.Team.Team1)
             transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
-        else
-            transform.SetPositionAndRotation(node.WorldPosition, 
+        else {
+            // Update the line below if no fighting events occur
+            this.GetComponentInParent<EventTrigger>().enabled = false;
+
+            transform.SetPositionAndRotation(node.WorldPosition,
                 Quaternion.Euler(0, node.YRotation - 180.0f, 0));
+        }
     }
 
     // ABSTRACTION
     // Algorithm to find target for Agent to attack
     protected void FindTarget() {
-        var allEnemies = GameManager.Instance.GetAgents(MyTeam);
+        var allEnemies = GameManager.Instance.GetAgents(Team);
         float minDistance = Mathf.Infinity;
         Agent agent = null;
 
