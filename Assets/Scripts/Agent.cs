@@ -50,7 +50,12 @@ public class Agent : MonoBehaviour {
         node.SetOccupied(true);
 
         transform.SetParent(node.Parent);
-        transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
+
+        if(team == GameManager.Team.Team1)
+            transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
+        else
+            transform.SetPositionAndRotation(node.WorldPosition, 
+                Quaternion.Euler(0, node.YRotation - 180.0f, 0));
     }
 
     // ABSTRACTION
@@ -80,7 +85,7 @@ public class Agent : MonoBehaviour {
             return true;
         }
 
-        this.transform.position += direction.normalized * MoveSpeed * Time.deltaTime;
+        this.transform.position += MoveSpeed * Time.deltaTime * direction.normalized;
         return false;
     }
 

@@ -44,7 +44,7 @@ public class GridManager : Manager<GridManager> {
 
         StartPositionPerTeam = new Dictionary<GameManager.Team, int>();
         StartPositionPerTeam.Add(GameManager.Team.Team1, 0);
-        StartPositionPerTeam.Add(GameManager.Team.Team2, 1);
+        StartPositionPerTeam.Add(GameManager.Team.Team2, _allBattleTiles.Count - 1);
     }
 
     // ABSTRACTION
@@ -118,8 +118,8 @@ public class GridManager : Manager<GridManager> {
     // ABSTRACTION
     // Get all free nodes in the given Graph
     public Graph.Node GetFreeNode(GameManager.Team teamNumber, Graph graph) {
-        int startIndex = StartPositionPerTeam[teamNumber];
-        int currentIndex = startIndex;
+        var startIndex = StartPositionPerTeam[teamNumber];
+        var currentIndex = startIndex;
 
         while (graph.Nodes[currentIndex].IsOccupied) {
             if (startIndex == 0) {
