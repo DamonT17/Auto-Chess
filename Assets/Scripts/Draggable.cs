@@ -75,6 +75,7 @@ public class Draggable : MonoBehaviour {
 
         IsDragging = true;
         PlayerManager.Instance.SelectedAgent = this.gameObject;
+        PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = false;
     }
 
     // On Agent dragging event, update tile colors as Agent moves over each available tile
@@ -139,8 +140,10 @@ public class Draggable : MonoBehaviour {
         if (!IsDragging)
             return;
 
-        if (!TryRelease())
+        if (!TryRelease()) {
             this.transform.position = _originPosition;
+            PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = true;
+        }
 
         if (_previousTile != null) {
             _previousTile.SetHighlightColor(_default);
@@ -162,6 +165,8 @@ public class Draggable : MonoBehaviour {
         GridManager.Instance.CenterTile.SetAlpha(0f);
 
         IsDragging = false;
+
+        PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = true;
         PlayerManager.Instance.SelectedAgent = null;
     }
 
@@ -172,12 +177,12 @@ public class Draggable : MonoBehaviour {
         
         // Disallow release on new tile if tile is null or "invalid"
         if (tile != null && tile.ColorIndex != _invalid) {
-            Agent thisAgent = GetComponent<Agent>();
-            Graph.Node targetNode = GridManager.Instance.GetNodeForTile(tile);
+            var agent = GetComponent<Agent>();
+            var targetNode = GridManager.Instance.GetNodeForTile(tile);
 
-            if (thisAgent != null && targetNode != null) {
+            if (agent != null && targetNode != null) {
                 // Check if team size is full
-                thisAgent.CurrentNode.SetOccupied(false);
+                agent.CurrentNode.SetOccupied(false);
 
                 // Swap Agent positions, nodes, parents
                 if (targetNode.IsOccupied) {
@@ -191,8 +196,8 @@ public class Draggable : MonoBehaviour {
                     _originNode.SetOccupied(true);
                 }
 
-                thisAgent.SetCurrentNode(targetNode);
-                thisAgent.transform.SetPositionAndRotation(targetNode.WorldPosition,
+                agent.SetCurrentNode(targetNode);
+                agent.transform.SetPositionAndRotation(targetNode.WorldPosition,
                     Quaternion.Euler(0, targetNode.YRotation, 0));
                 targetNode.SetOccupied(true);
             
