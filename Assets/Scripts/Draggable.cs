@@ -186,8 +186,8 @@ public class Draggable : MonoBehaviour {
 
                 // Swap Agent positions, nodes, parents
                 if (targetNode.IsOccupied) {
-                    Transform targetChild = targetNode.Parent.GetChild(0);
-                    Agent targetAgent = targetChild.GetComponent<Agent>();
+                    var targetChild = targetNode.Parent.GetChild(0);
+                    var targetAgent = targetChild.GetComponent<Agent>();
 
                     targetAgent.CurrentNode.SetOccupied(false);
                     targetAgent.SetCurrentNode(_originNode);
@@ -199,6 +199,7 @@ public class Draggable : MonoBehaviour {
                 agent.SetCurrentNode(targetNode);
                 agent.transform.SetPositionAndRotation(targetNode.WorldPosition,
                     Quaternion.Euler(0, targetNode.YRotation, 0));
+
                 targetNode.SetOccupied(true);
             
                 GameManager.Instance.CurrentTeamSize = GridManager.Instance.GetOccupiedTiles(GridManager.Instance.Graph,

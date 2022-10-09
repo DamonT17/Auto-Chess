@@ -364,7 +364,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6615335363922474278, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+        - m_Target: {fileID: 2159753623129978228}
           m_TargetAssemblyTypeName: Draggable, Assembly-CSharp
           m_MethodName: OnStartDrag
           m_Mode: 1
@@ -380,7 +380,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6615335363922474278, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+        - m_Target: {fileID: 2159753623129978228}
           m_TargetAssemblyTypeName: Draggable, Assembly-CSharp
           m_MethodName: OnDragging
           m_Mode: 1
@@ -396,7 +396,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6615335363922474278, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+        - m_Target: {fileID: 2159753623129978228}
           m_TargetAssemblyTypeName: Draggable, Assembly-CSharp
           m_MethodName: OnEndDrag
           m_Mode: 1
@@ -412,7 +412,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6615335363922474278, guid: a2da120c822bf544c9ad72c8842c8c37, type: 3}
+        - m_Target: {fileID: 2159753623129978228}
           m_TargetAssemblyTypeName: Draggable, Assembly-CSharp
           m_MethodName: OnClick
           m_Mode: 1
@@ -428,9 +428,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 11500000, guid: b6563e5eb504c06409191f2c13381da9, type: 3}
+        - m_Target: {fileID: 2159753623129978228}
           m_TargetAssemblyTypeName: Draggable, Assembly-CSharp
-          m_MethodName: 
+          m_MethodName: OnRelease
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
