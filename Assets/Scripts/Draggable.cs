@@ -75,7 +75,7 @@ public class Draggable : MonoBehaviour {
 
         IsDragging = true;
         PlayerManager.Instance.SelectedAgent = this.gameObject;
-        PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = false;
+        PlayerManager.Instance.SelectedAgent.GetComponentInChildren<Animator>().enabled = false;
     }
 
     // On Agent dragging event, update tile colors as Agent moves over each available tile
@@ -142,7 +142,7 @@ public class Draggable : MonoBehaviour {
 
         if (!TryRelease()) {
             this.transform.position = _originPosition;
-            PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = true;
+            PlayerManager.Instance.SelectedAgent.GetComponentInChildren<Animator>().enabled = true;
         }
 
         if (_previousTile != null) {
@@ -166,7 +166,7 @@ public class Draggable : MonoBehaviour {
 
         IsDragging = false;
 
-        PlayerManager.Instance.SelectedAgent.GetComponent<Animator>().enabled = true;
+        PlayerManager.Instance.SelectedAgent.GetComponentInChildren<Animator>().enabled = true;
         PlayerManager.Instance.SelectedAgent = null;
     }
 
