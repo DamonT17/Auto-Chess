@@ -25,6 +25,7 @@ public class GameManager : Manager<GameManager> {
     // Flags
     public bool IsGameActive;
     public bool IsTimerActive;
+    public bool IsFightActive;
 
     // Constants
     public const int GameStateCarousel = 0;
@@ -218,9 +219,11 @@ public class GameManager : Manager<GameManager> {
     // Debug method for generating enemies to fight
     public void DebugBuild() {
         for (var i = 0; i < PlayerManager.Instance.PlayerLevel; i++) {
-            int randomIndex = UnityEngine.Random.Range(0, AgentDatabase.AllAgents.Count);
-            Agent agent = Instantiate(AgentDatabase.AllAgents[randomIndex].AgentPrefab);
-            agent.gameObject.name = AgentDatabase.AllAgents[randomIndex].AgentName;
+            // int randomIndex = UnityEngine.Random.Range(0, AgentDatabase.AllAgents.Count);
+            // Agent agent = Instantiate(AgentDatabase.AllAgents[randomIndex].AgentPrefab);
+
+            Agent agent = Instantiate(AgentDatabase.AllAgents[0].AgentPrefab);
+            agent.gameObject.name = AgentDatabase.AllAgents[0].AgentName;
             _enemyAgents.Add(agent);
 
             // Create generic code to place enemy agents on battlefield
@@ -233,6 +236,6 @@ public class GameManager : Manager<GameManager> {
     public void DebugFight() {
         // Add code for fighting here...
 
-        //OnRoundStart.Invoke();
+        IsFightActive = !IsFightActive;
     }
 }

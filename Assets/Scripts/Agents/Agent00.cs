@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Agent00 : Agent {
+    private string _nodeParent;
+
     // Awake is called when the script instance is being loaded
     protected void Awake() {
         // Initialize stats
@@ -24,20 +26,29 @@ public class Agent00 : Agent {
 
     // Update is called once per frame
     public void Update() {
-        if(!HasEnemy)
-            Debug.Log("No enemy!");
-            //FindTarget();
+        _nodeParent = currentNode.Parent.parent.name;
 
-        if (IsInRange && !Moving) {
-            if (CanAttack) {
-                Attack();
-                CurrentTarget.TakeDamage(Damage);
+        if (GameManager.Instance.IsFightActive && _nodeParent == "Battle Grid") {
+            if (!HasEnemy)
+                FindTarget();
+
+            if (IsInRange && !Moving) {
+                Debug.Log("In range of enemy!");
+                /*
+                if (CanAttack) {
+                    Attack();
+                    CurrentTarget.TakeDamage(Damage);
+                }*/
+            }
+            else {
+                Debug.Log("Getting in range...");
+                GetInRange();
             }
         }
-        else GetInRange();
     }
 
+    /*
     protected override void OnRoundStart() {
         FindTarget();
-    }
+    }*/
 }

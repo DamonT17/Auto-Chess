@@ -39,9 +39,9 @@ public class Agent : MonoBehaviour {
     
     // Start is called before the first frame update
     protected void Start() {
-        GameManager.Instance.OnRoundStart += OnRoundStart;      // Correctly called??
-        GameManager.Instance.OnRoundEnd += OnRoundEnd;          // Correctly called??
-        GameManager.Instance.OnAgentDeath += OnAgentDeath;      // Correctly called??
+        // GameManager.Instance.OnRoundStart += OnRoundStart;      // Correctly called??
+        // GameManager.Instance.OnRoundEnd += OnRoundEnd;          // Correctly called??
+        // GameManager.Instance.OnAgentDeath += OnAgentDeath;      // Correctly called??
     }
 
     // ABSTRACTION
@@ -68,7 +68,9 @@ public class Agent : MonoBehaviour {
     // ABSTRACTION
     // Algorithm to find target for Agent to attack
     protected void FindTarget() {
-        var allEnemies = GameManager.Instance.GetAgents(Team);
+        var allEnemies = GameManager.Instance.GetAgents(
+            Team == GameManager.Team.Team1 ? GameManager.Team.Team2 : GameManager.Team.Team1);
+
         var minDistance = Mathf.Infinity;
         Agent target = null;
 
@@ -110,7 +112,7 @@ public class Agent : MonoBehaviour {
                     Vector3.Distance(x.WorldPosition, this.transform.position)).ToList();
 
             foreach (var n in candidateNodes) {
-                if (n.IsOccupied) {
+                if (!n.IsOccupied) {
                     DestinationNode = n;
                     break;
                 }
@@ -142,15 +144,13 @@ public class Agent : MonoBehaviour {
 
     // ABSTRACTION
     // Set of current position of Agent on Graph
-    public void SetCurrentNode(Graph.Node node)
-    {
+    public void SetCurrentNode(Graph.Node node) {
         currentNode = node;
         SetCurrentParent(currentNode);
     }
 
     // Set of Agent's current node as the Parent object
-    private void SetCurrentParent(Graph.Node node)
-    {
+    private void SetCurrentParent(Graph.Node node) {
         transform.SetParent(node.Parent);
     }
 
