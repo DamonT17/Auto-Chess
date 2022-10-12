@@ -26,7 +26,9 @@ public class Agent : MonoBehaviour {
     protected float WaitBetweenAttack;
 
     // Agent Stats
+    [Range(1, 5)]
     public int Cost = 1;
+
     public string Origin;
     public string Class;
     public int Health, Mana, StartingMana, Armor, MagicResist, Damage;
@@ -37,9 +39,9 @@ public class Agent : MonoBehaviour {
     
     // Start is called before the first frame update
     protected void Start() {
-        GameManager.Instance.OnRoundStart += OnRoundStart;
-        GameManager.Instance.OnRoundEnd += OnRoundEnd;
-        GameManager.Instance.OnAgentDeath += OnAgentDeath;
+        GameManager.Instance.OnRoundStart += OnRoundStart;      // Correctly called??
+        GameManager.Instance.OnRoundEnd += OnRoundEnd;          // Correctly called??
+        GameManager.Instance.OnAgentDeath += OnAgentDeath;      // Correctly called??
     }
 
     // ABSTRACTION
@@ -67,17 +69,17 @@ public class Agent : MonoBehaviour {
     // Algorithm to find target for Agent to attack
     protected void FindTarget() {
         var allEnemies = GameManager.Instance.GetAgents(Team);
-        float minDistance = Mathf.Infinity;
-        Agent agent = null;
+        var minDistance = Mathf.Infinity;
+        Agent target = null;
 
-        foreach (Agent a in allEnemies) {
-            if (Vector3.Distance(a.transform.position, this.transform.position) <= minDistance) {
-                minDistance = Vector3.Distance(a.transform.position, this.transform.position);
-                agent = a;
+        foreach (var enemy in allEnemies) {
+            if (Vector3.Distance(enemy.transform.position, this.transform.position) <= minDistance) {
+                minDistance = Vector3.Distance(enemy.transform.position, this.transform.position);
+                target = enemy;
             }
         }
 
-        CurrentTarget = agent;
+        CurrentTarget = target;
     }
 
     // ABSTRACTION
@@ -102,7 +104,7 @@ public class Agent : MonoBehaviour {
 
         if (!Moving) {
             DestinationNode = null;
-            List<Graph.Node> candidateNodes = GridManager.Instance.GetNeighborNodes(CurrentTarget.CurrentNode);
+            var candidateNodes = GridManager.Instance.GetNeighborNodes(CurrentTarget.CurrentNode);
 
             candidateNodes = candidateNodes.OrderBy(x => 
                     Vector3.Distance(x.WorldPosition, this.transform.position)).ToList();
@@ -139,6 +141,20 @@ public class Agent : MonoBehaviour {
     }
 
     // ABSTRACTION
+    // Set of current position of Agent on Graph
+    public void SetCurrentNode(Graph.Node node)
+    {
+        currentNode = node;
+        SetCurrentParent(currentNode);
+    }
+
+    // Set of Agent's current node as the Parent object
+    private void SetCurrentParent(Graph.Node node)
+    {
+        transform.SetParent(node.Parent);
+    }
+
+    // ABSTRACTION
     // Method to deal damage to Agent
     public void TakeDamage(int amount) {
         Health -= amount;
@@ -167,18 +183,6 @@ public class Agent : MonoBehaviour {
 
         yield return new WaitForSeconds(WaitBetweenAttack);
         CanAttack = true;
-    }
-
-    // ABSTRACTION
-    // Set of current position of Agent on Graph
-    public void SetCurrentNode(Graph.Node node) {
-        currentNode = node;
-        SetCurrentParent(currentNode);
-    }
-
-    // Set of Agent's current node as the Parent object
-    private void SetCurrentParent(Graph.Node node) {
-        transform.SetParent(node.Parent);
     }
 
     // CONTINUE HERE WITH AGENT METHODS FOR ROUND START, END, AND DEATH

@@ -35,7 +35,7 @@ public class GameManager : Manager<GameManager> {
     private const int _carouselLength    = 10;  // Carousel timer length (s)
     private const int _roundPrepLength   = 15;  // Round preparation timer length between rounds (s)
     private const int _roundLength       = 30;  // Round timer length (s)
-    private const int _roundBufferLength = 2;   // Buffer timer length between states (s)
+    private const int _roundBufferLength = 3;   // Buffer timer length between states (s)
 
     private readonly int[] _agentPoolSize = { 24, 18, 15, 10, 9 };    // # of Agents/Agent Cost
     
@@ -44,7 +44,7 @@ public class GameManager : Manager<GameManager> {
     public int GameStateIndex;
     public int LastGameState;
 
-    public int[] TimerLength;
+    public int[] GameStateTimerLength;
 
     private List<Agent> _myAgents = new List<Agent>();
     private List<Agent> _enemyAgents = new List<Agent>();
@@ -71,7 +71,7 @@ public class GameManager : Manager<GameManager> {
     // Start is called before the first frame update
     private void Start() {
         GameState = new int[5];     // Initialize size of game state linear buffer
-        TimerLength = new int[] {
+        GameStateTimerLength = new int[] {
             _carouselLength,
             _roundPrepLength,
             _roundLength,
@@ -85,14 +85,14 @@ public class GameManager : Manager<GameManager> {
         if (IsGameActive) {
             SetGameState(GameStatePrep);   // Initialize game state
 
-            StartCoroutine(Timer(TimerLength[GetGameState()]));
+            StartCoroutine(GameStateTimer(GameStateTimerLength[GetGameState()]));
         }
     }
 
     // Called every fixed frame-rate frame
     private void FixedUpdate() {
         if (!IsTimerActive) {
-            GameStateIndex = UpdateGameStateIndex(GameStateIndex);
+            GameStateIndex = SetGameStateIndex(GameStateIndex);
 
             switch (LastGameState) {
                 case GameStateCarousel:
@@ -105,6 +105,7 @@ public class GameManager : Manager<GameManager> {
                     SetGameState(GameStateFight);
                     AllowedAgentsText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", true);
+
                     break;
 
                 case GameStateFight:
@@ -120,12 +121,12 @@ public class GameManager : Manager<GameManager> {
                     break;
             }
 
-            StartCoroutine(Timer(TimerLength[GetGameState()]));
+            StartCoroutine(GameStateTimer(GameStateTimerLength[GetGameState()]));
         }
     }
 
     // Game state round(s) timer
-    private IEnumerator Timer(int roundLength) {
+    private IEnumerator GameStateTimer(int roundLength) {
         float timer = roundLength;
         RoundSlider.maxValue = roundLength;
 
@@ -188,7 +189,7 @@ public class GameManager : Manager<GameManager> {
 
     // ABSTRACTION
     // Update the game state's index position
-    private int UpdateGameStateIndex(int index) {
+    private int SetGameStateIndex(int index) {
         if (index >= GameState.Length - 1) // Reset buffer index position
             index = 0;
         else index++;
@@ -231,5 +232,7 @@ public class GameManager : Manager<GameManager> {
     // Debug method to fight enemies
     public void DebugFight() {
         // Add code for fighting here...
+
+        //OnRoundStart.Invoke();
     }
 }
