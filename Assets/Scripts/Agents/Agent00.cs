@@ -21,7 +21,7 @@ public class Agent00 : Agent {
         CritChance = 0.25f;
         CritDamage = 1.25f;
         Range = 1;
-        MoveSpeed = 1f;
+        MoveSpeed = 2f;
     }
 
     // Update is called once per frame

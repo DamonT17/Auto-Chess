@@ -10,6 +10,8 @@ public class Agent : MonoBehaviour {
     public GameManager.Team Team;
     protected Agent CurrentTarget;
     protected Graph.Node currentNode;
+
+    protected Animator AgentAnimator;
     
     public Graph.Node CurrentNode => currentNode;
 
@@ -35,10 +37,12 @@ public class Agent : MonoBehaviour {
     public float AttackSpeed, CritChance, CritDamage;
     [Range(1, 7)]
     public int Range = 1;
-    public float MoveSpeed = 1f;
+    public float MoveSpeed = 2f;
     
     // Start is called before the first frame update
     protected void Start() {
+        AgentAnimator = GetComponentInChildren<Animator>();
+
         // GameManager.Instance.OnRoundStart += OnRoundStart;      // Correctly called??
         // GameManager.Instance.OnRoundEnd += OnRoundEnd;          // Correctly called??
         // GameManager.Instance.OnAgentDeath += OnAgentDeath;      // Correctly called??
@@ -88,6 +92,8 @@ public class Agent : MonoBehaviour {
     // Algorithm for Agent path to along a Graph's nodes
     protected bool MoveTowards(Graph.Node nextNode) {
         var direction = nextNode.WorldPosition - this.transform.position;
+        var rotation = Vector3.RotateTowards(transform.forward, direction,
+            MoveSpeed * Time.deltaTime, 0.0f);
 
         if (direction.sqrMagnitude <= 0.005f) {
             transform.position = nextNode.WorldPosition;
@@ -95,6 +101,12 @@ public class Agent : MonoBehaviour {
         }
 
         this.transform.position += MoveSpeed * Time.deltaTime * direction.normalized;
+        
+        Debug.DrawRay(transform.position, rotation, Color.red);
+        transform.rotation = Quaternion.LookRotation(rotation);
+
+        //AgentAnimator.SetFloat("MoveSpeed", MoveSpeed);
+
         return false;
     }
 
