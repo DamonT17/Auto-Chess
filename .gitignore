@@ -25,6 +25,7 @@
 
 # 3rd Party plugins
 /[Aa]ssets/3rd Party/
+/[Aa]ssets/3rd Party.meta
 
 # Visual Studio cache directory
 .vs/
