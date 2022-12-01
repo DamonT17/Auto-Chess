@@ -4,15 +4,23 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 // Base class for all Agents
 public class Agent : MonoBehaviour {
+    // Assignables
+    [SerializeField]
+    protected AgentStatusBar StatusBar;
+    
     public GameManager.Team Team;
     protected Agent CurrentTarget;
     protected Graph.Node currentNode;
 
     protected Animator AgentAnimator;
-    
+    protected Image[] AgentStatuses;
+
+    protected const float _animationSpeedMultiplier = 0.25f;
+
     public Graph.Node CurrentNode => currentNode;
 
     protected bool HasEnemy => CurrentTarget != null;
@@ -33,15 +41,29 @@ public class Agent : MonoBehaviour {
 
     public string Origin;
     public string Class;
-    public int Health, Mana, StartingMana, Armor, MagicResist, Damage;
+    public int Health, MaxHealth, Mana, StartingMana, Armor, MagicResist, Damage;
     public float AttackSpeed, CritChance, CritDamage;
     [Range(1, 7)]
     public int Range = 1;
     public float MoveSpeed = 2f;
+
+    private enum Status {
+        HealthBackground,
+        Shield,
+        Damage,
+        Health,
+        ManaBackground,
+        Mana
+    };
+
+    protected virtual void Awake() {
+        AgentAnimator = GetComponentInChildren<Animator>();
+        AgentAnimator.SetFloat("MoveSpeed", MoveSpeed * _animationSpeedMultiplier);
+    }
     
     // Start is called before the first frame update
     protected void Start() {
-        AgentAnimator = GetComponentInChildren<Animator>();
+        
 
         // GameManager.Instance.OnRoundStart += OnRoundStart;      // Correctly called??
         // GameManager.Instance.OnRoundEnd += OnRoundEnd;          // Correctly called??
@@ -58,8 +80,9 @@ public class Agent : MonoBehaviour {
 
         transform.SetParent(node.Parent);
 
-        if(team == GameManager.Team.Team1)
+        if (team == GameManager.Team.Team1) {
             transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
+        }
         else {
             // Update the line below if no fighting events occur
             this.GetComponentInParent<EventTrigger>().enabled = false;
@@ -101,11 +124,10 @@ public class Agent : MonoBehaviour {
         }
 
         this.transform.position += MoveSpeed * Time.deltaTime * direction.normalized;
-        
+        AgentAnimator.SetBool("IsMoving", true);
+
         Debug.DrawRay(transform.position, rotation, Color.red);
         transform.rotation = Quaternion.LookRotation(rotation);
-
-        //AgentAnimator.SetFloat("MoveSpeed", MoveSpeed);
 
         return false;
     }
@@ -151,6 +173,8 @@ public class Agent : MonoBehaviour {
             // Free previous node
             currentNode.SetOccupied(false);
             SetCurrentNode(DestinationNode);
+
+            AgentAnimator.SetBool("IsMoving", false);
         }
     }
 
@@ -170,9 +194,14 @@ public class Agent : MonoBehaviour {
     // Method to deal damage to Agent
     public void TakeDamage(int amount) {
         Health -= amount;
+        StatusBar.SetImage((int) Status.Health, (float) Health / MaxHealth);
+        StatusBar.StartDamageEffect();
+
+        Debug.Log($"{this.Team} {this.name}'s health: {Health}");
 
         if (Health <= 0 && !Dead) {
             Dead = true;
+            //AgentAnimator.SetBool("IsDead", Dead);
             currentNode.SetOccupied(false);
             GameManager.Instance.AgentDead(this);
         }
@@ -191,10 +220,12 @@ public class Agent : MonoBehaviour {
     // Time interval for Agent attack speed
     private IEnumerator WaitCoroutine() {
         CanAttack = false;
+        AgentAnimator.SetBool("CanAttack", CanAttack);
         yield return null;
 
         yield return new WaitForSeconds(WaitBetweenAttack);
         CanAttack = true;
+        AgentAnimator.SetBool("CanAttack", CanAttack);
     }
 
     // CONTINUE HERE WITH AGENT METHODS FOR ROUND START, END, AND DEATH

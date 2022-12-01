@@ -6,14 +6,17 @@ public class Agent00 : Agent {
     private string _nodeParent;
 
     // Awake is called when the script instance is being loaded
-    protected void Awake() {
+    protected override void Awake() {
+        base.Awake();
+
         // Initialize stats
         Cost = 1;
         Origin = "Trickster";
         Class = "Intellect";
+        MaxHealth = 500;
         Health = 500; 
         Mana = 60;
-        StartingMana = 0;
+        StartingMana = 15;
         Armor = 40;
         MagicResist = 40;
         Damage = 50;
@@ -29,19 +32,17 @@ public class Agent00 : Agent {
         _nodeParent = currentNode.Parent.parent.name;
 
         if (GameManager.Instance.IsFightActive && _nodeParent == "Battle Grid") {
-            if (!HasEnemy)
+            if (!HasEnemy) {
                 FindTarget();
+            }
 
             if (IsInRange && !Moving) {
-                Debug.Log("In range of enemy!");
-                /*
                 if (CanAttack) {
                     Attack();
                     CurrentTarget.TakeDamage(Damage);
-                }*/
+                }
             }
             else {
-                Debug.Log("Getting in range...");
                 GetInRange();
             }
         }

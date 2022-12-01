@@ -1,12 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-// Class for handling player's status bar movement in game
-internal class StatusBar : MonoBehaviour {
+public class PlayerStatusBar : MonoBehaviour {
     // Assignables
-    public PlayerControl Player;
-
     private Camera _camera;
-    private RectTransform _statusRt;
+    private RectTransform _statusRectTransform;
     private Vector3 _cameraRotation;
 
     // Start is called before the first frame update
@@ -14,11 +13,11 @@ internal class StatusBar : MonoBehaviour {
         _camera = Camera.main;
         _cameraRotation = _camera.transform.eulerAngles;
 
-        _statusRt = GetComponent<RectTransform>();
-        }
+        _statusRectTransform = GetComponent<RectTransform>();
+    }
 
     // Update is called once per frame
     void Update() {
-        _statusRt.rotation = Quaternion.Euler(_cameraRotation.x, 0.0f, 0.0f);
+        _statusRectTransform.rotation = Quaternion.Euler(_cameraRotation.x, 0.0f, 0.0f);
     }
 }
