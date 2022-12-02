@@ -8,59 +8,48 @@ using UnityEngine.UI;
 
 // Base class for all Agents
 public class Agent : MonoBehaviour {
-    // Assignables
-    [SerializeField]
-    protected AgentStatusBar StatusBar;
-    
+    [Header("Agent Generics")]
     public GameManager.Team Team;
+    [SerializeField] protected AgentStatusBar StatusBar;
+    [SerializeField] protected Animator AgentAnimator;
+
+    [Header("Agent Attributes")]
+    public Attribute Cost;
+    public Attribute Health;
+    public Attribute Mana;
+    public Attribute Armor;
+    public Attribute MagicResist;
+    public Attribute Damage;
+    public Attribute AttackSpeed;
+    public Attribute CritRate;
+    public Attribute Range;
+    public Attribute MoveSpeed;
+
+    // Variables
     protected Agent CurrentTarget;
     protected Graph.Node currentNode;
-
-    protected Animator AgentAnimator;
-    protected Image[] AgentStatuses;
-
-    protected const float _animationSpeedMultiplier = 0.25f;
+    protected Graph.Node DestinationNode;
+    protected float WaitBetweenAttack;
 
     public Graph.Node CurrentNode => currentNode;
 
+    // Flags
     protected bool HasEnemy => CurrentTarget != null;
-
-    protected bool IsInRange => CurrentTarget != null &&
-                                Vector3.Distance(this.transform.position, CurrentTarget.transform.position) <= Range;
-
-    protected bool Moving;
-    protected Graph.Node DestinationNode;
-
+    protected bool InRange => CurrentTarget != null && Vector3.Distance(this.transform.position, CurrentTarget.transform.position) <= Range.BaseValue;
+    protected bool IsMoving;
+    [SerializeField] protected bool CanAttack; // Continue here, value never changes state???
     protected bool Dead;
-    protected bool CanAttack = true;
-    protected float WaitBetweenAttack;
 
-    // Agent Stats
-    [Range(1, 5)]
-    public int Cost = 1;
+    // Constants
+    protected const float ANIMATION_SPEED_MULTIPLIER = 0.25f;
 
-    public string Origin;
-    public string Class;
-    public int Health, MaxHealth, Mana, StartingMana, Armor, MagicResist, Damage;
-    public float AttackSpeed, CritChance, CritDamage;
-    [Range(1, 7)]
-    public int Range = 1;
-    public float MoveSpeed = 2f;
-
-    private enum Status {
-        HealthBackground,
+    protected enum StatusBarState {
         Shield,
         Damage,
         Health,
-        ManaBackground,
         Mana
-    };
-
-    protected virtual void Awake() {
-        AgentAnimator = GetComponentInChildren<Animator>();
-        AgentAnimator.SetFloat("MoveSpeed", MoveSpeed * _animationSpeedMultiplier);
     }
-    
+
     // Start is called before the first frame update
     protected void Start() {
         
@@ -70,21 +59,19 @@ public class Agent : MonoBehaviour {
         // GameManager.Instance.OnAgentDeath += OnAgentDeath;      // Correctly called??
     }
 
-    // ABSTRACTION
     // Initialization of Agent for Player's team
     public void Setup(GameManager.Team team, Graph.Node node) {
         Team = team;
 
         this.currentNode = node;
         node.SetOccupied(true);
-
         transform.SetParent(node.Parent);
 
         if (team == GameManager.Team.Team1) {
             transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
         }
         else {
-            // Update the line below if no fighting events occur
+            // Disable player drag capabilities for enemy Agents
             this.GetComponentInParent<EventTrigger>().enabled = false;
 
             transform.SetPositionAndRotation(node.WorldPosition,
@@ -92,100 +79,106 @@ public class Agent : MonoBehaviour {
         }
     }
 
-    // ABSTRACTION
     // Algorithm to find target for Agent to attack
     protected void FindTarget() {
-        var allEnemies = GameManager.Instance.GetAgents(
+        var allEnemyAgents = GameManager.Instance.GetAgents(
             Team == GameManager.Team.Team1 ? GameManager.Team.Team2 : GameManager.Team.Team1);
+
+        if (allEnemyAgents == null) {
+            return;
+        }
 
         var minDistance = Mathf.Infinity;
         Agent target = null;
 
-        foreach (var enemy in allEnemies) {
-            if (Vector3.Distance(enemy.transform.position, this.transform.position) <= minDistance) {
-                minDistance = Vector3.Distance(enemy.transform.position, this.transform.position);
-                target = enemy;
+        foreach (var enemy in allEnemyAgents) {
+            var enemyDistance = Vector3.Distance(enemy.transform.position, this.transform.position);
+
+            if (!(enemyDistance <= minDistance)) {
+                continue;
             }
+
+            minDistance = enemyDistance;
+            target = enemy;
         }
 
         CurrentTarget = target;
     }
 
-    // ABSTRACTION
-    // Algorithm for Agent path to along a Graph's nodes
+    // Algorithm for Agent path to enemy along a Graph's nodes
     protected bool MoveTowards(Graph.Node nextNode) {
-        var direction = nextNode.WorldPosition - this.transform.position;
-        var rotation = Vector3.RotateTowards(transform.forward, direction,
-            MoveSpeed * Time.deltaTime, 0.0f);
-
-        if (direction.sqrMagnitude <= 0.005f) {
-            transform.position = nextNode.WorldPosition;
-            return true;
+        if (nextNode == null) {
+            return false;
         }
 
-        this.transform.position += MoveSpeed * Time.deltaTime * direction.normalized;
-        AgentAnimator.SetBool("IsMoving", true);
+        var direction = nextNode.WorldPosition - this.transform.position;
+        var rotation = Vector3.RotateTowards(transform.forward, direction,
+            MoveSpeed.Value * Time.deltaTime, 0.0f);
 
-        Debug.DrawRay(transform.position, rotation, Color.red);
+        // Agent has made it to the next node
+        if (direction.sqrMagnitude <= 0.005f) {
+            transform.position = nextNode.WorldPosition;
+            return false;
+        }
+
+        this.transform.position += MoveSpeed.Value * Time.deltaTime * direction.normalized;
         transform.rotation = Quaternion.LookRotation(rotation);
 
-        return false;
+        return true;
     }
 
-    // ABSTRACTION
-    // Move Agent to get in attacking range of target
-    protected void GetInRange() {
-        if (CurrentTarget == null)
+    // Move Agent to node that is in attacking range of target
+    protected void GetInRange(Agent targetAgent) {
+        if (targetAgent == null) {
             return;
+        }
 
-        if (!Moving) {
+        if (!IsMoving) {
             DestinationNode = null;
-            var candidateNodes = GridManager.Instance.GetNeighborNodes(CurrentTarget.CurrentNode);
 
-            candidateNodes = candidateNodes.OrderBy(x => 
-                    Vector3.Distance(x.WorldPosition, this.transform.position)).ToList();
+            var possibleNodes = GridManager.Instance.GetNeighborNodes(targetAgent.CurrentNode);
+            possibleNodes = possibleNodes.OrderBy(node => Vector3.Distance(
+                node.WorldPosition, this.transform.position)).ToList();
 
-            foreach (var n in candidateNodes) {
-                if (!n.IsOccupied) {
-                    DestinationNode = n;
-                    break;
+            foreach (var node in possibleNodes) {
+                if (node.IsOccupied) {
+                    continue;
                 }
+
+                DestinationNode = node;
+                break;
             }
 
-            if (DestinationNode == null)
+            if (DestinationNode == null) {
                 return;
+            }
 
             var path = GridManager.Instance.GetNodePath(currentNode, DestinationNode);
-
-            if (path == null && path.Count >= 1)
+            if (path == null || path[1].IsOccupied) {
                 return;
-
-            if (path[1].IsOccupied)
-                return;
+            }
 
             path[1].SetOccupied(true);
             DestinationNode = path[1];
         }
 
-        Moving = !MoveTowards(DestinationNode);
+        IsMoving = MoveTowards(DestinationNode);
+        AgentAnimator.SetBool("IsMoving", IsMoving);
 
-        if (!Moving) {
+        if (!IsMoving) {
             // Free previous node
             currentNode.SetOccupied(false);
             SetCurrentNode(DestinationNode);
-
-            AgentAnimator.SetBool("IsMoving", false);
         }
     }
 
-    // ABSTRACTION
-    // Set of current position of Agent on Graph
+    // Set current position of Agent on Graph
     public void SetCurrentNode(Graph.Node node) {
         currentNode = node;
         SetCurrentParent(currentNode);
     }
 
-    // Set of Agent's current node as the Parent object
+    // Set Agent's current node as the Parent object
     private void SetCurrentParent(Graph.Node node) {
         transform.SetParent(node.Parent);
     }
@@ -193,13 +186,13 @@ public class Agent : MonoBehaviour {
     // ABSTRACTION
     // Method to deal damage to Agent
     public void TakeDamage(int amount) {
-        Health -= amount;
-        StatusBar.SetImage((int) Status.Health, (float) Health / MaxHealth);
+        Health.Value -= amount;
+        StatusBar.SetImage((int) StatusBarState.Health, (float) Health.Value / Health.MaxValue);
         StatusBar.StartDamageEffect();
 
         Debug.Log($"{this.Team} {this.name}'s health: {Health}");
 
-        if (Health <= 0 && !Dead) {
+        if (Health.Value <= 0 && !Dead) {
             Dead = true;
             //AgentAnimator.SetBool("IsDead", Dead);
             currentNode.SetOccupied(false);
@@ -210,20 +203,20 @@ public class Agent : MonoBehaviour {
     // POLYMORPHISM
     // Agent attacking method 
     protected virtual void Attack() {
-        if (!CanAttack)
+        if (!CanAttack) {
             return;
-
-        WaitBetweenAttack = 1 / AttackSpeed;
-        StartCoroutine(WaitCoroutine());
+        }
+        
+        StartCoroutine(AttackCoroutine());
     }
 
     // Time interval for Agent attack speed
-    private IEnumerator WaitCoroutine() {
+    private IEnumerator AttackCoroutine() {
         CanAttack = false;
         AgentAnimator.SetBool("CanAttack", CanAttack);
         yield return null;
 
-        yield return new WaitForSeconds(WaitBetweenAttack);
+        yield return new WaitForSeconds(AttackSpeed.Value);
         CanAttack = true;
         AgentAnimator.SetBool("CanAttack", CanAttack);
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Agent Database
   m_EditorClassIdentifier: 
   AllAgents:
-  - AgentPrefab: {fileID: 7511304876883596209, guid: 3aa7bf22036a3544e9273953eee80fb8, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Poser
     OriginIcon: {fileID: 21300000, guid: 06823b49a1fcd154da0942a436195adb, type: 3}
@@ -23,7 +23,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 0
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Blep
     OriginIcon: {fileID: 21300000, guid: c50ecf4cb0747f64487b52e59758d9a7, type: 3}
@@ -33,7 +33,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 1
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Nostin
     OriginIcon: {fileID: 21300000, guid: 062eeb9d5e8ba8f45a9ddfea52518f82, type: 3}
@@ -43,7 +43,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 2
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Kennef
     OriginIcon: {fileID: 21300000, guid: 06823b49a1fcd154da0942a436195adb, type: 3}
@@ -53,7 +53,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 3
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Glitch
     OriginIcon: {fileID: 21300000, guid: 93af7b787a2d66e468add73213a37970, type: 3}
@@ -63,7 +63,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 4
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #5
     OriginIcon: {fileID: 0}
@@ -73,7 +73,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 5
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #6
     OriginIcon: {fileID: 0}
@@ -83,7 +83,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 6
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #7
     OriginIcon: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 7
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #8
     OriginIcon: {fileID: 0}
@@ -103,7 +103,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 8
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #9
     OriginIcon: {fileID: 0}
@@ -113,7 +113,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 9
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #10
     OriginIcon: {fileID: 0}
@@ -123,7 +123,7 @@ MonoBehaviour:
     AgentCost: 1
     AgentNumber: 10
     BackgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-  - AgentPrefab: {fileID: 2159753623129978225, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
+  - AgentPrefab: {fileID: 1445688107700088789, guid: f5f00934b7fd26f45b9c47ab99fdad2c, type: 3}
     AgentIcon: {fileID: 0}
     AgentName: Agent #11
     OriginIcon: {fileID: 0}

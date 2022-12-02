@@ -6,6 +6,7 @@ using System.Linq;
 [Serializable]
 public class Attribute {
     public float BaseValue;
+    public float MaxValue;
     public readonly ReadOnlyCollection<Modifier> AttributeModifiers;
 
     protected bool _isDirty = true;
@@ -25,6 +26,7 @@ public class Attribute {
 
             return _value;
         }
+        set => _value = value;
     }
 
     public Attribute() {
@@ -32,8 +34,9 @@ public class Attribute {
         AttributeModifiers = _attributeModifiers.AsReadOnly();
     }
 
-    public Attribute(float baseValue) : this() {
+    public Attribute(float baseValue, float maxValue) : this() {
         BaseValue = baseValue;
+        MaxValue = maxValue;
     }
 
     public virtual void AddModifier(Modifier modifier) {
@@ -71,12 +74,10 @@ public class Attribute {
     }
 
     protected virtual int CompareModifierOrder(Modifier a, Modifier b) {
-        if (a.Order < b.Order)
-        {
+        if (a.Order < b.Order) {
             return -1;
         }
-        else if (a.Order > b.Order)
-        {
+        else if (a.Order > b.Order) {
             return 1;
         }
 

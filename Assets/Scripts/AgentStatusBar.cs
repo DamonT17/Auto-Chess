@@ -4,20 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class AgentStatusBar : MonoBehaviour {
+    [SerializeField] private Image[] _statusImages;
+
     // Assignables
     private Camera _camera;
     private RectTransform _statusRectTransform;
     private Vector3 _cameraRotation;
 
-    private Image[] _statusImages;
     private Agent _thisAgent;
 
-    private enum Status {
-        HealthBackground,
+    private enum StatusBarState {
         Shield,
         Damage,
         Health,
-        ManaBackground,
         Mana
     };
 
@@ -31,16 +30,15 @@ public class AgentStatusBar : MonoBehaviour {
         _cameraRotation = _camera.transform.eulerAngles;
 
         _statusRectTransform = GetComponent<RectTransform>();
-        _statusImages = GetComponentsInChildren<Image>();
         _thisAgent = GetComponentInParent<Agent>();
     }
 
     // Start is called before the first frame update
     private void Start() {
-        SetImage((int) Status.Shield, 0f);
-        SetImage((int) Status.Damage, 1f);
-        SetImage((int) Status.Health, 1f);
-        SetImage((int) Status.Mana, (float) _thisAgent.StartingMana / _thisAgent.Mana);
+        SetImage((int) StatusBarState.Shield, 0f);
+        SetImage((int) StatusBarState.Damage, 1f);
+        SetImage((int) StatusBarState.Health, 1f);
+        SetImage((int) StatusBarState.Mana, (float) _thisAgent.Mana.Value / _thisAgent.Mana.MaxValue);
     }
 
     // Update is called once per frame
@@ -50,8 +48,8 @@ public class AgentStatusBar : MonoBehaviour {
         _damageEffectTimer -= Time.deltaTime;
 
         if (_damageEffectTimer < 0) {
-            if (_statusImages[(int) Status.Health].fillAmount < _statusImages[(int) Status.Damage].fillAmount) {
-                _statusImages[(int) Status.Damage].fillAmount -= _damageEffectSpeed * Time.deltaTime;
+            if (_statusImages[(int) StatusBarState.Health].fillAmount < _statusImages[(int) StatusBarState.Damage].fillAmount) {
+                _statusImages[(int) StatusBarState.Damage].fillAmount -= _damageEffectSpeed * Time.deltaTime;
             }
         }
     }
