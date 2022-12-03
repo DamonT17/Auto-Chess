@@ -114,9 +114,6 @@ public class Graph {
             }
         }
 
-        foreach (var node in nodePath) {
-            Debug.Log(node.Parent.name);
-        }
         return nodePath;
     }
 

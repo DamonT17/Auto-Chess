@@ -10,9 +10,11 @@ public class SpawnManager : Manager<SpawnManager> {
     public GameObject ItemPrefab;
     public GameObject[] OrbPrefab = new GameObject[3];
 
+    public GameObject StatusPopupPrefab;
+
     // Spawn calculation variables
-    private Vector3 _spawnCenter = new Vector3(0, 1, 0); // Reference to Game Manager object position
-    private const float _spawnRadius = 5.0f;
+    private readonly Vector3 _spawnCenter = new Vector3(0, 1, 0); // Reference to Game Manager object position
+    private const float _SPAWN_RADIUS = 5.0f;
 
     // Start is called before the first frame update
     void Start() {
@@ -28,7 +30,7 @@ public class SpawnManager : Manager<SpawnManager> {
     public Vector3 GenerateCircularSpawnPosition() {
         Vector3 spawnPos;
 
-        float rad = Random.Range(0, _spawnRadius); 
+        float rad = Random.Range(0, _SPAWN_RADIUS); 
         float ang = Random.Range(0, 360);
 
         spawnPos.x = _spawnCenter.x + (rad * Mathf.Cos(ang * Mathf.Deg2Rad));

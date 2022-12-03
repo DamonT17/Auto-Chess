@@ -21,7 +21,7 @@ TagManager:
   - Player
   - Agent
   - Tile
-  - 
+  - Popup
   - 
   - 
   - 
@@ -45,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Top
+    uniqueID: 1497863955
     locked: 0

@@ -37,7 +37,7 @@ public class Agent : MonoBehaviour {
     protected bool HasEnemy => CurrentTarget != null;
     protected bool InRange => CurrentTarget != null && Vector3.Distance(this.transform.position, CurrentTarget.transform.position) <= Range.BaseValue;
     protected bool IsMoving;
-    [SerializeField] protected bool CanAttack; // Continue here, value never changes state???
+    protected bool CanAttack = true;
     protected bool Dead;
 
     // Constants
@@ -170,6 +170,8 @@ public class Agent : MonoBehaviour {
             currentNode.SetOccupied(false);
             SetCurrentNode(DestinationNode);
         }
+
+        // Need check to see if actually in range of target, not just next node 
     }
 
     // Set current position of Agent on Graph
@@ -190,7 +192,7 @@ public class Agent : MonoBehaviour {
         StatusBar.SetImage((int) StatusBarState.Health, (float) Health.Value / Health.MaxValue);
         StatusBar.StartDamageEffect();
 
-        Debug.Log($"{this.Team} {this.name}'s health: {Health}");
+        StatusPopup.CreatePopup(CurrentTarget.transform.position + Vector3.up, amount, 0, true);
 
         if (Health.Value <= 0 && !Dead) {
             Dead = true;
@@ -206,19 +208,22 @@ public class Agent : MonoBehaviour {
         if (!CanAttack) {
             return;
         }
-        
+
+        AgentAnimator.SetBool("CanAttack", CanAttack);
+
+        WaitBetweenAttack = 1 / AttackSpeed.Value;
         StartCoroutine(AttackCoroutine());
     }
 
     // Time interval for Agent attack speed
     private IEnumerator AttackCoroutine() {
         CanAttack = false;
-        AgentAnimator.SetBool("CanAttack", CanAttack);
         yield return null;
 
-        yield return new WaitForSeconds(AttackSpeed.Value);
-        CanAttack = true;
         AgentAnimator.SetBool("CanAttack", CanAttack);
+
+        yield return new WaitForSeconds(WaitBetweenAttack);
+        CanAttack = true;
     }
 
     // CONTINUE HERE WITH AGENT METHODS FOR ROUND START, END, AND DEATH
