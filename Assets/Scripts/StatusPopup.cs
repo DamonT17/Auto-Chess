@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public  enum PopupType {
+    Physical,
+    Magic,
+    True,
+    Health
+}
+
 public class StatusPopup : MonoBehaviour {
     private TextMeshPro _textMesh; 
     private Color _textColor;
@@ -14,12 +21,7 @@ public class StatusPopup : MonoBehaviour {
 
     private const float _DISAPPEAR_TIMER_MAX = 0.5f;
 
-    private enum PopupType {
-        Physical,
-        Magic,
-        True,
-        Health
-    }
+    
 
     private void Awake() {
         _textMesh = transform.GetComponent<TextMeshPro>();
@@ -89,17 +91,17 @@ public class StatusPopup : MonoBehaviour {
         if (!isCritical) {
             // Normal hit
             _textMesh.SetText(value.ToString());
-            _textMesh.fontSize = 3;
+            _textMesh.fontSize = 2;
 
-            _moveVector = new Vector3(Random.Range(-1, -0.5f), -0.25f, Random.Range(-1f, 0.5f)) * 8f;
+            _moveVector = new Vector3(Random.Range(-0.25f, 0.25f), -0.25f, Random.Range(-0.25f, 0.25f)) * 8f;
         }
         else {
             // Critical hit
             _textMesh.SetText($"<sprite index=0 color=#{ColorUtility.ToHtmlStringRGB(_textColor)}>" 
                               + value.ToString());
-            _textMesh.fontSize = 4;
+            _textMesh.fontSize = 3;
 
-            _moveVector = new Vector3(Random.Range(-1, -0.5f), -0.25f, Random.Range(-1, -0.5f)) * 10f;
+            _moveVector = new Vector3(Random.Range(-0.25f, 0.25f), -0.5f, Random.Range(-0.25f, 0.25f)) * 10f;
         }
 
         _disappearTimer = _DISAPPEAR_TIMER_MAX;

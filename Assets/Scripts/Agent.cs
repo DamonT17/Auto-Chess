@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 // Base class for all Agents
 public class Agent : MonoBehaviour {
@@ -22,6 +23,7 @@ public class Agent : MonoBehaviour {
     public Attribute Damage;
     public Attribute AttackSpeed;
     public Attribute CritRate;
+    public Attribute CritDamage;
     public Attribute Range;
     public Attribute MoveSpeed;
 
@@ -42,6 +44,9 @@ public class Agent : MonoBehaviour {
 
     // Constants
     protected const float ANIMATION_SPEED_MULTIPLIER = 0.25f;
+    protected const float PRE_MITIGATION_DAMAGE_PERCENT = 0.01f;
+    protected const float POST_MITIGATION_DAMAGE_PERCENT = 0.07f;
+    protected const float MANA_GENERATION_ON_ATTACK = 10f;
 
     protected enum StatusBarState {
         Shield,
@@ -185,23 +190,6 @@ public class Agent : MonoBehaviour {
         transform.SetParent(node.Parent);
     }
 
-    // ABSTRACTION
-    // Method to deal damage to Agent
-    public void TakeDamage(int amount) {
-        Health.Value -= amount;
-        StatusBar.SetImage((int) StatusBarState.Health, (float) Health.Value / Health.MaxValue);
-        StatusBar.StartDamageEffect();
-
-        StatusPopup.CreatePopup(CurrentTarget.transform.position + Vector3.up, amount, 0, true);
-
-        if (Health.Value <= 0 && !Dead) {
-            Dead = true;
-            //AgentAnimator.SetBool("IsDead", Dead);
-            currentNode.SetOccupied(false);
-            GameManager.Instance.AgentDead(this);
-        }
-    }
-
     // POLYMORPHISM
     // Agent attacking method 
     protected virtual void Attack() {
@@ -210,6 +198,7 @@ public class Agent : MonoBehaviour {
         }
 
         AgentAnimator.SetBool("CanAttack", CanAttack);
+        ManaGenerationOnAttack(MANA_GENERATION_ON_ATTACK);
 
         WaitBetweenAttack = 1 / AttackSpeed.Value;
         StartCoroutine(AttackCoroutine());
@@ -224,6 +213,85 @@ public class Agent : MonoBehaviour {
 
         yield return new WaitForSeconds(WaitBetweenAttack);
         CanAttack = true;
+    }
+
+    protected virtual bool ApplyCriticalHit(Attribute critRate) {
+        return Random.Range(0f, 1f) <= critRate.Value;
+    }
+
+    // Calculates the pre-mitigation damage value based on Agent CritRate and CritDamage attributes
+    protected float PreMitigationDamage(float amount, bool isCritical) {
+        var preMitigationDamage = !isCritical ? amount : amount * (1 + CritDamage.Value);
+
+        return preMitigationDamage;
+    }
+
+    // Calculates the post mitigation damage value based on Agent Armor/MagicResist attributes
+    protected float PostMitigationDamage(float amount, int type, bool isCritical) {
+        var postMitigationDamage = !isCritical ? amount : amount * (1 + CritDamage.Value);
+
+        switch (type) {
+            case (int) PopupType.Physical:
+                if (Armor.Value >= 0) {
+                    postMitigationDamage *= (100 / (100 + Armor.Value));
+                }
+                else {
+                    postMitigationDamage *= (2 - (100 / (100 - Armor.Value)));
+                }
+
+                break;
+            case (int) PopupType.Magic:
+                if (Armor.Value >= 0) {
+                    postMitigationDamage *= (100 / (100 + MagicResist.Value));
+                }
+                else {
+                    postMitigationDamage *= (2 - (100 / (100 - MagicResist.Value)));
+                }
+
+                break;
+        }
+
+        return postMitigationDamage;
+    }
+
+    // Method to deal damage to Agent
+    public void ApplyDamage(float amount, int type, bool isCritical) {
+        var preMitigationDamage = PreMitigationDamage(amount, isCritical);
+        var postMitigationDamage = PostMitigationDamage(amount, type, isCritical);
+
+        Health.Value -= postMitigationDamage;
+        StatusBar.SetImage((int) StatusBarState.Health, Health.Value / Health.MaxValue);
+        StatusBar.StartDamageEffect();
+
+        ManaGenerationOnDamage(preMitigationDamage, postMitigationDamage);
+
+        StatusPopup.CreatePopup(CurrentTarget.transform.position + Vector3.up * 0.75f,
+            (int) postMitigationDamage, type, isCritical);
+
+        if (Health.Value <= 0 && !Dead) {
+            Dead = true;
+            //AgentAnimator.SetBool("IsDead", Dead);
+            currentNode.SetOccupied(false);
+            GameManager.Instance.AgentDead(this);
+        }
+    }
+
+    // Increases Agent's mana by MANA_GENERATION_ON_ATTACK
+    protected void ManaGenerationOnAttack(float amount) {
+        Mana.Value += amount;
+        StatusBar.SetImage((int) StatusBarState.Mana, Mana.Value / Mana.MaxValue);
+    }
+
+    // Increases Agent's mana by percentages of pre- and post-mitigation damages
+    protected void ManaGenerationOnDamage(float preMitigationDamage, float postMitigationDamage) {
+        Mana.Value += PRE_MITIGATION_DAMAGE_PERCENT * preMitigationDamage +
+                      POST_MITIGATION_DAMAGE_PERCENT * postMitigationDamage;
+        StatusBar.SetImage((int) StatusBarState.Mana, Mana.Value / Mana.MaxValue);
+    }
+
+    protected void ResetMana() {
+        Mana.Value = 0f;
+        StatusBar.SetImage((int) StatusBarState.Mana, Mana.Value);
     }
 
     // CONTINUE HERE WITH AGENT METHODS FOR ROUND START, END, AND DEATH

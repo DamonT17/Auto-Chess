@@ -27,9 +27,19 @@ public class DummyAgent : Agent {
             if (!CanAttack) {
                 return;
             }
+            
+            if (Mana.Value < Mana.MaxValue) {
+                // Basic attack
+                Attack();
+                CurrentTarget.ApplyDamage(Damage.Value, (int) PopupType.Physical, ApplyCriticalHit(CritRate));
+            }
+            else {
+                // Ability attack
+                // AbilityAttack();
+                // ApplyAbilityDamage();
 
-            Attack();
-            CurrentTarget.TakeDamage((int) Damage.Value);
+                ResetMana();
+            }
         }
         else {
             GetInRange(CurrentTarget);
@@ -55,6 +65,9 @@ public class DummyAgent : Agent {
         AttackSpeed.MaxValue = 5.0f;
         
         CritRate.BaseValue = 0.25f;
+        CritRate.MaxValue = 1.0f;
+
+        CritDamage.BaseValue = 0.3f;
         
         Range.BaseValue = 1;
         Range.MaxValue = 7;
