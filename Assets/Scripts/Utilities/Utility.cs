@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UmbraProjects.Utilities {
     public class Utility : MonoBehaviour {
-        public Vector3 GetMousePositionInWorldCoordinates(Camera gameCamera) {
+        public static Vector3 GetMousePositionInWorldCoordinates(Camera gameCamera) {
             // Get world coordinates of mouse position
             var ray = gameCamera.ScreenPointToRay(Input.mousePosition);
 
