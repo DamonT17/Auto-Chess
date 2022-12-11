@@ -156,11 +156,6 @@ MonoBehaviour:
   Team: 0
   StatusBar: {fileID: 602955834830486246}
   AgentAnimator: {fileID: 2817732532001566896}
-  AgentStatusImages:
-  - {fileID: 390002177963579365}
-  - {fileID: 390002178600332667}
-  - {fileID: 390002178817354832}
-  - {fileID: 390002178933552620}
   Cost:
     BaseValue: 0
     MaxValue: 0
@@ -183,6 +178,9 @@ MonoBehaviour:
     BaseValue: 0
     MaxValue: 0
   CritRate:
+    BaseValue: 0
+    MaxValue: 0
+  CritDamage:
     BaseValue: 0
     MaxValue: 0
   Range:
@@ -301,50 +299,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8ff1b5478e042546ba9cab3cfea8881, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &390002177963579365 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 243105085666495374, guid: ada3df2ff2916cb40b7904184cc051b7, type: 3}
-  m_PrefabInstance: {fileID: 447613535382133867}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &390002178600332667 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 243105086568542480, guid: ada3df2ff2916cb40b7904184cc051b7, type: 3}
-  m_PrefabInstance: {fileID: 447613535382133867}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &390002178817354832 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 243105086955499579, guid: ada3df2ff2916cb40b7904184cc051b7, type: 3}
-  m_PrefabInstance: {fileID: 447613535382133867}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &390002178933552620 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 243105086802078087, guid: ada3df2ff2916cb40b7904184cc051b7, type: 3}
-  m_PrefabInstance: {fileID: 447613535382133867}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &8534336029526805793
@@ -715,7 +669,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8840958280878420080}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1.8, z: 0.5}

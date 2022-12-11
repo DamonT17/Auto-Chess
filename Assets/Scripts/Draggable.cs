@@ -14,13 +14,13 @@ public class Draggable : MonoBehaviour {
 
     public bool IsDragging;
 
-    private const int _default = 0;
-    private const int _valid   = 1;
-    private const int _invalid = 2;
-    private const int _origin  = 3;
+    private const int _DEFAULT = 0;
+    private const int _VALID   = 1;
+    private const int _INVALID = 2;
+    private const int _ORIGIN  = 3;
 
-    private const int _leftClick = 0;
-    private const int _rightClick = 1;
+    private const int _LEFT_CLICK = 0;
+    private const int _RIGHT_CLICK = 1;
 
     // Start is called before the first frame update
     private void Start() {
@@ -29,11 +29,11 @@ public class Draggable : MonoBehaviour {
 
     // On Agent click, get parent tile and update color for user feedback
     public void OnClick() {
-        if (Input.GetMouseButtonDown(_leftClick)) {
+        if (Input.GetMouseButtonDown(_LEFT_CLICK)) {
             _originTile = GetTileUnder();
 
             if (_originTile != null) {
-                _originTile.SetHighlightColor(_origin);
+                _originTile.SetHighlightColor(_ORIGIN);
                 _originPosition = this.transform.position;
                 _originNode = GridManager.Instance.GetNodeForTile(_originTile);
             }
@@ -42,9 +42,9 @@ public class Draggable : MonoBehaviour {
 
     // On Agent release, reset origin tile color
     public void OnRelease() {
-        if (Input.GetMouseButtonUp(_leftClick)) {
+        if (Input.GetMouseButtonUp(_LEFT_CLICK)) {
             if (_originTile != null) {
-                _originTile.SetHighlightColor(_default);
+                _originTile.SetHighlightColor(_DEFAULT);
                 _originTile.SetAlpha(0f);
             }
         }
@@ -52,25 +52,26 @@ public class Draggable : MonoBehaviour {
     
     // On Agent StartDrag event, show board Tiles
     public void OnStartDrag() {
-        foreach (var tile in GridManager.Instance.MyTiles)
+        foreach (var tile in GridManager.Instance.MyTiles) {
             tile.SetAlpha(1f);
+        }
 
-        foreach (var tile in GridManager.Instance.MyBenchTiles)
+        foreach (var tile in GridManager.Instance.MyBenchTiles) {
             tile.SetAlpha(0.588f);
-
+        }
 
         // Test loops for enemy tiles and bench to disallow player from placing Agent
         foreach (var tile in GridManager.Instance.EnemyTiles) {
-            tile.SetHighlightColor(_invalid);
+            tile.SetHighlightColor(_INVALID);
             tile.SetAlpha(1f);
         }
 
         foreach (var tile in GridManager.Instance.EnemyBenchTiles) {
-            tile.SetHighlightColor(_invalid);
+            tile.SetHighlightColor(_INVALID);
             tile.SetAlpha(0.588f);
         }
 
-        GridManager.Instance.CenterTile.SetHighlightColor(_invalid);
+        GridManager.Instance.CenterTile.SetHighlightColor(_INVALID);
         GridManager.Instance.CenterTile.SetAlpha(1f);
 
         IsDragging = true;
@@ -80,8 +81,9 @@ public class Draggable : MonoBehaviour {
 
     // On Agent dragging event, update tile colors as Agent moves over each available tile
     public void OnDragging() {
-        if (!IsDragging)
+        if (!IsDragging) {
             return;
+        }
 
         // Need interaction with shop UI for selling Agents
 
@@ -101,44 +103,47 @@ public class Draggable : MonoBehaviour {
                         if (GameManager.Instance.CurrentTeamSize == GameManager.Instance.TeamSize) {
                             // Check if Agent's origin was on Battle Grid
                             if (this.transform.parent.parent.name == parentName) {
-                                tile.SetHighlightColor(_valid);
+                                tile.SetHighlightColor(_VALID);
                             }
                             else {
                                 tile.SetHighlightColor(
-                                    !GridManager.Instance.GetNodeForTile(tile).IsOccupied ? _invalid : _valid);
+                                    !GridManager.Instance.GetNodeForTile(tile).IsOccupied ? _INVALID : _VALID);
                             }
                         }
                         else {
-                            tile.SetHighlightColor(_valid);
+                            tile.SetHighlightColor(_VALID);
                         }
                     }
 
                     break;
                 case "Player Agents":
-                    tile.SetHighlightColor(_valid);
+                    tile.SetHighlightColor(_VALID);
                     break;
                 case "Enemy Agents":    // Do not want to allow player to place agents on enemy bench
-                    tile.SetHighlightColor(_invalid);
+                    tile.SetHighlightColor(_INVALID);
                     break;
             }
             
             if (_previousTile != null && tile != _previousTile) {
-                _previousTile.SetHighlightColor(_previousTile == _originTile ? _origin : _default);
+                _previousTile.SetHighlightColor(_previousTile == _originTile ? _ORIGIN : _DEFAULT);
             }
 
-            if(GridManager.Instance.MyTiles.Contains(tile) || GridManager.Instance.MyBenchTiles.Contains(tile))
+            if (GridManager.Instance.MyTiles.Contains(tile) || GridManager.Instance.MyBenchTiles.Contains(tile)) {
                 _previousTile = tile;
+            }
         }
         else {
-            if(_previousTile != null)
-                _previousTile.SetHighlightColor(_previousTile == _originTile ? _origin : _default);
+            if (_previousTile != null) {
+                _previousTile.SetHighlightColor(_previousTile == _originTile ? _ORIGIN : _DEFAULT);
+            }
         }
     }
 
     // On Agent EndDrag event, update Agent position and reset tile colors
     public void OnEndDrag() {
-        if (!IsDragging)
+        if (!IsDragging) {
             return;
+        }
 
         if (!TryRelease()) {
             this.transform.position = _originPosition;
@@ -146,21 +151,25 @@ public class Draggable : MonoBehaviour {
         }
 
         if (_previousTile != null) {
-            _previousTile.SetHighlightColor(_default);
+            _previousTile.SetHighlightColor(_DEFAULT);
             _previousTile = null;
         }
 
-        foreach (var tile in GridManager.Instance.MyTiles)
+        foreach (var tile in GridManager.Instance.MyTiles) {
             tile.SetAlpha(0f);
+        }
 
-        foreach (var tile in GridManager.Instance.MyBenchTiles)
+        foreach (var tile in GridManager.Instance.MyBenchTiles) {
             tile.SetAlpha(0f);
+        }
 
-        foreach (var tile in GridManager.Instance.EnemyTiles)
+        foreach (var tile in GridManager.Instance.EnemyTiles) {
             tile.SetAlpha(0f);
+        }
 
-        foreach (var tile in GridManager.Instance.EnemyBenchTiles)
+        foreach (var tile in GridManager.Instance.EnemyBenchTiles) {
             tile.SetAlpha(0f);
+        }
 
         GridManager.Instance.CenterTile.SetAlpha(0f);
 
@@ -176,7 +185,7 @@ public class Draggable : MonoBehaviour {
         var tile = GetTileUnder();
         
         // Disallow release on new tile if tile is null or "invalid"
-        if (tile != null && tile.ColorIndex != _invalid) {
+        if (tile != null && tile.ColorIndex != _INVALID) {
             var agent = GetComponent<Agent>();
             var targetNode = GridManager.Instance.GetNodeForTile(tile);
 
@@ -214,7 +223,6 @@ public class Draggable : MonoBehaviour {
         return false;
     }
     
-    // ABSTRACTION
     // Obtain the tile underneath the Agent
     public Tile GetTileUnder() {
         if (!IsDragging) {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UmbraProjects.Managers;
 using Random = System.Random;
 
 // INHERITANCE
@@ -28,15 +29,15 @@ public class GameManager : Manager<GameManager> {
     public bool IsFightActive;
 
     // Constants
-    public const int GameStateCarousel = 0;
-    public const int GameStatePrep     = 1;
-    public const int GameStateFight    = 2;
-    public const int GameStateBuffer   = 3;
+    public const int GAME_STATE_CAROUSEL = 0;
+    public const int GAME_STATE_PREP     = 1;
+    public const int GAME_STATE_FIGHT    = 2;
+    public const int GAME_STATE_BUFFER   = 3;
 
-    private const int _carouselLength    = 10;  // Carousel timer length (s)
-    private const int _roundPrepLength   = 15;  // Round preparation timer length between rounds (s)
-    private const int _roundLength       = 30;  // Round timer length (s)
-    private const int _roundBufferLength = 3;   // Buffer timer length between states (s)
+    private const int _CAROUSEL_LENGTH    = 10;  // Carousel timer length (s)
+    private const int _ROUND_PREP_LENGTH   = 15; // Round preparation timer length between rounds (s)
+    private const int _ROUND_LENGTH       = 30;  // Round timer length (s)
+    private const int _ROUND_BUFFER_LENGTH = 3;  // Buffer timer length between states (s)
 
     private readonly int[] _agentPoolSize = { 24, 18, 15, 10, 9 };    // # of Agents/Agent Cost
     
@@ -73,10 +74,10 @@ public class GameManager : Manager<GameManager> {
     private void Start() {
         GameState = new int[5];     // Initialize size of game state linear buffer
         GameStateTimerLength = new int[] {
-            _carouselLength,
-            _roundPrepLength,
-            _roundLength,
-            _roundBufferLength
+            _CAROUSEL_LENGTH,
+            _ROUND_PREP_LENGTH,
+            _ROUND_LENGTH,
+            _ROUND_BUFFER_LENGTH
         }; // Initialize size and values of main game timer values
 
         AllowedAgentsText.text = $"{CurrentTeamSize}/{TeamSize}";
@@ -84,7 +85,7 @@ public class GameManager : Manager<GameManager> {
         IsGameActive = true;        // Initialize game start
 
         if (IsGameActive) {
-            SetGameState(GameStatePrep);   // Initialize game state
+            SetGameState(GAME_STATE_PREP);   // Initialize game state
 
             StartCoroutine(GameStateTimer(GameStateTimerLength[GetGameState()]));
         }
@@ -96,27 +97,27 @@ public class GameManager : Manager<GameManager> {
             GameStateIndex = SetGameStateIndex(GameStateIndex);
 
             switch (LastGameState) {
-                case GameStateCarousel:
-                    SetGameState(GameStatePrep);
+                case GAME_STATE_CAROUSEL:
+                    SetGameState(GAME_STATE_PREP);
                     AllowedAgentsText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
-                case GameStatePrep:
-                    SetGameState(GameStateFight);
+                case GAME_STATE_PREP:
+                    SetGameState(GAME_STATE_FIGHT);
                     AllowedAgentsText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", true);
 
                     break;
 
-                case GameStateFight:
-                    SetGameState(GameStateBuffer);
+                case GAME_STATE_FIGHT:
+                    SetGameState(GAME_STATE_BUFFER);
                     AllowedAgentsText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
-                case GameStateBuffer:
-                    SetGameState(GameStatePrep);
+                case GAME_STATE_BUFFER:
+                    SetGameState(GAME_STATE_PREP);
                     AllowedAgentsText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;

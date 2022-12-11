@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UmbraProjects.Managers;
 
 // INHERITANCE
 // Inherited manager class to handle spawning of objects

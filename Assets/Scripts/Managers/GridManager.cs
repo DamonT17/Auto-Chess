@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UmbraProjects.Managers;
 
 // INHERITANCE
 // Inherited manager class to setup all environment grids

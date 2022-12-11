@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using UmbraProjects.Utilities;
 
 // Base class for Player control
 internal class PlayerControl : MonoBehaviour {

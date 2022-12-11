@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UmbraProjects.Managers;
 
 // INHERITANCE
 // Inherited manager class to handle all overhead player stats, mechanics, object generations, etc.
