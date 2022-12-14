@@ -13,8 +13,11 @@ namespace UmbraProjects.Utilities {
             }
 
             return worldPosition;
-        }   
+        }
 
-
+        // Gets tag of game object collided with
+        public static string GetColliderTag(Collider objectCollider) {
+            return objectCollider.tag;
+        }
     }
 }

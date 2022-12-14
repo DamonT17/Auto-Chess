@@ -1,19 +1,17 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UmbraProjects.AutoChess;
 using UmbraProjects.Utilities;
 using UmbraProjects.Utilities.Graphs;
-using Unity.Mathematics;
+using UmbraProjects.Utilities.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace UmbraProjects.AutoChess.Agents {
 // Base class for all Agents
-    public class Agent : MonoBehaviour {
-        [Header("Agent Generics")] public GameManager.Team Team;
+    public class Agent : MonoBehaviour, IDamageable<float>, IKillable, ILeveler {
+        [Header("Agent Generics")] 
+        public Team Team;
         [SerializeField] protected AgentStatusBar StatusBar;
         [SerializeField] protected Animator AgentAnimator;
 
@@ -55,8 +53,7 @@ namespace UmbraProjects.AutoChess.Agents {
         protected const float POST_MITIGATION_DAMAGE_PERCENT = 0.07f;
         protected const float MANA_GENERATION_ON_ATTACK = 10f;
 
-        protected enum StatusBarState
-        {
+        protected enum StatusBarState {
             Shield,
             Damage,
             Health,
@@ -73,14 +70,14 @@ namespace UmbraProjects.AutoChess.Agents {
         }
 
         // Initialization of Agent for Player's team
-        public void Setup(GameManager.Team team, Graph.Node node) {
+        public void Setup(Team team, Graph.Node node) {
             Team = team;
 
             this.currentNode = node;
             node.SetOccupied(true);
             transform.SetParent(node.Parent);
 
-            if (team == GameManager.Team.Team1) {
+            if (team == Team.Team1) {
                 transform.SetPositionAndRotation(node.WorldPosition, Quaternion.Euler(0, node.YRotation, 0));
             }
             else {
@@ -92,10 +89,14 @@ namespace UmbraProjects.AutoChess.Agents {
             }
         }
 
+        public void LevelUp() {
+            
+        }
+
         // Algorithm to find target for Agent to attack
         protected void FindTarget() {
             var allEnemyAgents = GameManager.Instance.GetAgents(
-                Team == GameManager.Team.Team1 ? GameManager.Team.Team2 : GameManager.Team.Team1);
+                Team == Team.Team1 ? Team.Team2 : Team.Team1);
 
             if (allEnemyAgents == null) {
                 return;
@@ -263,24 +264,30 @@ namespace UmbraProjects.AutoChess.Agents {
         }
 
         // Method to deal damage to Agent
+        public void ApplyDamage(float damageAmount) {
+            throw new System.NotImplementedException();
+        }
+
+        // Method to deal damage to Agent
         public void ApplyDamage(float amount, int type, bool isCritical) {
             var preMitigationDamage = PreMitigationDamage(amount, isCritical);
             var postMitigationDamage = PostMitigationDamage(amount, type, isCritical);
-
-            Health.Value -= postMitigationDamage;
-            StatusBar.SetImage((int) StatusBarState.Health, Health.Value / Health.MaxValue);
-            StatusBar.StartDamageEffect();
-
-            ManaGenerationOnDamage(preMitigationDamage, postMitigationDamage);
-
+            
             StatusPopup.CreatePopup(CurrentTarget.transform.position + Vector3.up * 0.75f,
                 (int) postMitigationDamage, type, isCritical);
 
-            if (Health.Value <= 0 && !Dead) {
-                Dead = true;
-                //AgentAnimator.SetBool("IsDead", Dead);
-                currentNode.SetOccupied(false);
-                GameManager.Instance.AgentDead(this);
+            Health.Value -= postMitigationDamage;
+            if (Health.Value > 0) {
+                // Agent alive
+                StatusBar.SetImage((int) StatusBarState.Health, Health.Value / Health.MaxValue);
+                StatusBar.StartDamageEffect();
+
+                ManaGenerationOnDamage(preMitigationDamage, postMitigationDamage);
+            }
+            else {
+                // Agent dead
+                Death();
+                EventManager.OnAgentDeath?.Invoke(this);
             }
         }
 
@@ -302,15 +309,19 @@ namespace UmbraProjects.AutoChess.Agents {
             StatusBar.SetImage((int) StatusBarState.Mana, Mana.Value);
         }
 
+        public void Death() {
+            Dead = true;
+            //AgentAnimator.SetBool("IsDead", Dead);
+            currentNode.SetOccupied(false);
+            GameManager.Instance.AgentDead(this);
+        }
+
         // CONTINUE HERE WITH AGENT METHODS FOR ROUND START, END, AND DEATH
 
-        protected virtual void OnRoundStart() {
-        }
+        protected virtual void OnRoundStart() { }
 
-        protected virtual void OnRoundEnd() {
-        }
+        protected virtual void OnRoundEnd() { }
 
-        protected virtual void OnAgentDeath(Agent deadAgent) {
-        }
+        protected virtual void OnAgentDeath(Agent deadAgent) { }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UmbraProjects.Managers;
 using UmbraProjects.Utilities.Graphs;
+using UmbraProjects.AutoChess;
 
 namespace UmbraProjects.AutoChess {
 // Inherited manager class to setup all environment grids
@@ -17,7 +18,7 @@ namespace UmbraProjects.AutoChess {
         public Graph Graph;
         public Graph BenchGraph;
         public Graph EnemyBenchGraph;
-        protected Dictionary<GameManager.Team, int> StartPositionPerTeam;
+        protected Dictionary<Team, int> StartPositionPerTeam;
 
         [SerializeField] private int _fromIndex = 0;
         [SerializeField] private int _toIndex = 0;
@@ -40,10 +41,9 @@ namespace UmbraProjects.AutoChess {
             InitializeBench(MyBenchTiles, ref BenchGraph);
             InitializeBench(EnemyBenchTiles, ref EnemyBenchGraph);
 
-            StartPositionPerTeam = new Dictionary<GameManager.Team, int>
-            {
-                {GameManager.Team.Team1, 0},
-                {GameManager.Team.Team2, _allTiles.Count - 1}
+            StartPositionPerTeam = new Dictionary<Team, int> {
+                {Team.Team1, 0},
+                {Team.Team2, _allTiles.Count - 1}
             };
         }
 
@@ -116,7 +116,7 @@ namespace UmbraProjects.AutoChess {
 
         // ABSTRACTION
         // Get all free nodes in the given Graph
-        public Graph.Node GetFreeNode(GameManager.Team teamNumber, Graph graph) {
+        public Graph.Node GetFreeNode(Team teamNumber, Graph graph) {
             var startIndex = StartPositionPerTeam[teamNumber];
             var currentIndex = startIndex;
 

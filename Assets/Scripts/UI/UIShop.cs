@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -6,6 +7,7 @@ using UmbraProjects.AutoChess.Agents;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace UmbraProjects.AutoChess.UI {
     // UI class for all Agent Shop interactions
@@ -39,8 +41,7 @@ namespace UmbraProjects.AutoChess.UI {
         private readonly int _shopCostRefresh = 2;
         private readonly int _shopCostXp = 4;
 
-        private readonly int[,] _shopLevelPercentages =
-        {
+        private readonly int[,] _shopLevelPercentages = {
             {100, 0, 0, 0, 0}, // Level 1
             {100, 0, 0, 0, 0}, // Level 2
             {75, 25, 0, 0, 0}, // Level 3
@@ -54,14 +55,17 @@ namespace UmbraProjects.AutoChess.UI {
             {1, 2, 12, 50, 35}, // Level 11
         };
 
+        private Player _player;
+
         // Start is called before the first frame update
         private void Start() {
             _lockPanel = GameObject.Find("Lock/Unlock Icon");
             _xpPanel = GameObject.Find("Buy Experience Panel");
+            _player = PlayerManager.Instance.Player.GetComponent<Player>();
 
-            PlayerLevel.text = $"Level {PlayerManager.Instance.PlayerLevel}";
+            PlayerLevel.text = $"Level {_player.Level.Value}";
             PlayerXpAmount.text = null;
-            PlayerCoins.text = PlayerManager.Instance.PlayerCoins.ToString();
+            PlayerCoins.text = _player.Coins.Value.ToString();
             RefreshCost.text = _shopCostRefresh.ToString();
             ExperienceCost.text = _shopCostXp.ToString();
 
@@ -81,7 +85,7 @@ namespace UmbraProjects.AutoChess.UI {
                 if (!t.gameObject.activeSelf)
                     t.gameObject.SetActive(true);
 
-                var cost = AgentCostTier(PlayerManager.Instance.PlayerLevel, Random.value);
+                var cost = AgentCostTier((int) _player.Level.Value, Random.value);
                 var tempAgents = _cachedAgentPool.Where(agent => agent.AgentCost == cost).ToList();
 
                 var cachedAgent = tempAgents[Random.Range(0, tempAgents.Count)];
@@ -247,8 +251,7 @@ namespace UmbraProjects.AutoChess.UI {
         // On card click, add Agent to team if Player can afford
         public void OnCardClick(UICard card, AgentDatabaseSO.AgentData agent) {
             // Check if player can afford Agent && bench is not full
-            if (PlayerManager.Instance.CanAfford(agent.AgentCost) &&
-                GridManager.Instance.IsNodeFree(GridManager.Instance.BenchGraph)) {
+            if (PlayerManager.Instance.CanAfford(agent.AgentCost) && GridManager.Instance.IsNodeFree(GridManager.Instance.BenchGraph)) {
                 PlayerManager.Instance.SpendCoins(agent.AgentCost);
                 card.gameObject.SetActive(false);
 
@@ -268,27 +271,23 @@ namespace UmbraProjects.AutoChess.UI {
 
             _cachedAgentShop = tempAgents;
         }
-
-        // ABSTRACTION
+        
         // On refresh click, return Agents to pool and generate a new Shop
         public void OnRefreshClick() {
             // Check if player can afford shop refresh
             if (PlayerManager.Instance.CanAfford(_shopCostRefresh)) {
-                if (_shopLocked)
+                if (_shopLocked) {
                     UnlockShop();
+                }
 
                 PlayerManager.Instance.SpendCoins(_shopCostRefresh);
 
-                CacheSelectedAgents(CardsInShop); // Cache the selected agents before returning to collective pool
-                ReturnAgentsToPool(_cachedAgentShop,
-                    GameManager.Instance.AgentPool); // Return agents to collective pool
-
-                Debug.Log($"Refreshed Pool Size: {GameManager.Instance.AgentPool.Count}");
+                CacheSelectedAgents(CardsInShop); 
+                ReturnAgentsToPool(_cachedAgentShop, GameManager.Instance.AgentPool);
                 GenerateShop(); // Generate new shop
             }
         }
 
-        // ABSTRACTION
         // On XP click, give Player XP if affordable
         public void OnExperienceClick() {
             // Check if player can afford XP
@@ -297,14 +296,15 @@ namespace UmbraProjects.AutoChess.UI {
                 PlayerManager.Instance.GainXP(_shopCostXp);
             }
         }
-
-        // ABSTRACTION
+        
         // On lock click, change the state of the shop 
         public void OnLockClick() {
-            if (!_shopLocked)
+            if (!_shopLocked) {
                 LockShop();
-            else
+            }
+            else {
                 UnlockShop();
+            }
         }
 
         // ABSTRACTION
@@ -391,7 +391,7 @@ namespace UmbraProjects.AutoChess.UI {
         // ABSTRACTION
         // Refresh Shop UI when invoking other methods
         private void RefreshUI() {
-            PlayerCoins.text = $"{PlayerManager.Instance.PlayerCoins}";
+            PlayerCoins.text = $"{_player.Coins.Value}";
         }
     }
 }

@@ -6,19 +6,17 @@ using System.Linq;
 namespace UmbraProjects.Utilities {
     [Serializable]
     public class Attribute {
-        public float BaseValue;
-        public float MaxValue;
-        public readonly ReadOnlyCollection<Modifier> AttributeModifiers;
-
         protected bool _isDirty = true;
         protected float _value;
         protected float _lastBaseValue = float.MinValue;
         protected readonly List<Modifier> _attributeModifiers;
+        
+        public float BaseValue;
+        public float MaxValue;
+        public readonly ReadOnlyCollection<Modifier> AttributeModifiers;
 
-        public virtual float Value
-        {
-            get
-            {
+        public virtual float Value {
+            get {
                 if (!_isDirty && Math.Abs(_lastBaseValue - BaseValue) < 0.0001f) {
                     return _value;
                 }

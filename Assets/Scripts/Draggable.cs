@@ -1,4 +1,6 @@
+using TMPro;
 using UmbraProjects.AutoChess.Agents;
+using UmbraProjects.Utilities;
 using UmbraProjects.Utilities.Graphs;
 using UnityEngine;
 
@@ -15,12 +17,9 @@ namespace UmbraProjects.AutoChess {
 
         private Graph.Node _originNode;
 
-        public bool IsDragging;
+        private Player _player;
 
-        private const int _DEFAULT = 0;
-        private const int _VALID = 1;
-        private const int _INVALID = 2;
-        private const int _ORIGIN = 3;
+        public bool IsDragging;
 
         private const int _LEFT_CLICK = 0;
         private const int _RIGHT_CLICK = 1;
@@ -28,6 +27,7 @@ namespace UmbraProjects.AutoChess {
         // Start is called before the first frame update
         private void Start() {
             _camera = Camera.main;
+            _player = PlayerManager.Instance.Player.GetComponent<Player>();
         }
 
         // On Agent click, get parent tile and update color for user feedback
@@ -36,8 +36,8 @@ namespace UmbraProjects.AutoChess {
                 _originTile = GetTileUnder();
 
                 if (_originTile != null) {
-                    _originTile.SetHighlightColor(_ORIGIN);
-                    _originPosition = this.transform.position;
+                    _originTile.SetHighlightColor((int) TileStatusType.Origin);
+                    _originPosition = transform.position;
                     _originNode = GridManager.Instance.GetNodeForTile(_originTile);
                 }
             }
@@ -47,7 +47,7 @@ namespace UmbraProjects.AutoChess {
         public void OnRelease() {
             if (Input.GetMouseButtonUp(_LEFT_CLICK)) {
                 if (_originTile != null) {
-                    _originTile.SetHighlightColor(_DEFAULT);
+                    _originTile.SetHighlightColor((int) TileStatusType.Default);
                     _originTile.SetAlpha(0f);
                 }
             }
@@ -65,16 +65,16 @@ namespace UmbraProjects.AutoChess {
 
             // Test loops for enemy tiles and bench to disallow player from placing Agent
             foreach (var tile in GridManager.Instance.EnemyTiles) {
-                tile.SetHighlightColor(_INVALID);
+                tile.SetHighlightColor((int) TileStatusType.Invalid);
                 tile.SetAlpha(1f);
             }
 
             foreach (var tile in GridManager.Instance.EnemyBenchTiles) {
-                tile.SetHighlightColor(_INVALID);
+                tile.SetHighlightColor((int) TileStatusType.Invalid);
                 tile.SetAlpha(0.588f);
             }
 
-            GridManager.Instance.CenterTile.SetHighlightColor(_INVALID);
+            GridManager.Instance.CenterTile.SetHighlightColor((int) TileStatusType.Invalid);
             GridManager.Instance.CenterTile.SetAlpha(1f);
 
             IsDragging = true;
@@ -90,8 +90,8 @@ namespace UmbraProjects.AutoChess {
 
             // Need interaction with shop UI for selling Agents
 
-            var newPosition = PlayerManager.Instance.GetMousePosition() + DragOffset;
-            this.transform.position = newPosition;
+            var newPosition = Utility.GetMousePositionInWorldCoordinates(_camera) + DragOffset;
+            transform.position = newPosition;
 
             var tile = GetTileUnder();
 
@@ -103,32 +103,32 @@ namespace UmbraProjects.AutoChess {
                         // Check if tile is part of MyTiles list
                         if (GridManager.Instance.MyTiles.Contains(tile)) {
                             // Logic for "full" team on battlefield
-                            if (GameManager.Instance.CurrentTeamSize == GameManager.Instance.TeamSize) {
+                            if ((int) _player.TeamSize.Value == (int) _player.TeamSize.MaxValue) {
                                 // Check if Agent's origin was on Battle Grid
                                 if (this.transform.parent.parent.name == parentName) {
-                                    tile.SetHighlightColor(_VALID);
+                                    tile.SetHighlightColor((int) TileStatusType.Valid);
                                 }
                                 else {
                                     tile.SetHighlightColor(
-                                        !GridManager.Instance.GetNodeForTile(tile).IsOccupied ? _INVALID : _VALID);
+                                        !GridManager.Instance.GetNodeForTile(tile).IsOccupied ? (int) TileStatusType.Invalid : (int) TileStatusType.Valid);
                                 }
                             }
                             else {
-                                tile.SetHighlightColor(_VALID);
+                                tile.SetHighlightColor((int) TileStatusType.Valid);
                             }
                         }
 
                         break;
                     case "Player Agents":
-                        tile.SetHighlightColor(_VALID);
+                        tile.SetHighlightColor((int) TileStatusType.Valid);
                         break;
                     case "Enemy Agents": // Do not want to allow player to place agents on enemy bench
-                        tile.SetHighlightColor(_INVALID);
+                        tile.SetHighlightColor((int) TileStatusType.Invalid);
                         break;
                 }
 
                 if (_previousTile != null && tile != _previousTile) {
-                    _previousTile.SetHighlightColor(_previousTile == _originTile ? _ORIGIN : _DEFAULT);
+                    _previousTile.SetHighlightColor(_previousTile == _originTile ? (int) TileStatusType.Origin : (int) TileStatusType.Default);
                 }
 
                 if (GridManager.Instance.MyTiles.Contains(tile) || GridManager.Instance.MyBenchTiles.Contains(tile)) {
@@ -137,7 +137,7 @@ namespace UmbraProjects.AutoChess {
             }
             else {
                 if (_previousTile != null) {
-                    _previousTile.SetHighlightColor(_previousTile == _originTile ? _ORIGIN : _DEFAULT);
+                    _previousTile.SetHighlightColor(_previousTile == _originTile ? (int) TileStatusType.Origin : (int) TileStatusType.Default);
                 }
             }
         }
@@ -154,7 +154,7 @@ namespace UmbraProjects.AutoChess {
             }
 
             if (_previousTile != null) {
-                _previousTile.SetHighlightColor(_DEFAULT);
+                _previousTile.SetHighlightColor((int) TileStatusType.Default);
                 _previousTile = null;
             }
 
@@ -188,7 +188,7 @@ namespace UmbraProjects.AutoChess {
             var tile = GetTileUnder();
 
             // Disallow release on new tile if tile is null or "invalid"
-            if (tile != null && tile.ColorIndex != _INVALID) {
+            if (tile != null && tile.ColorIndex != (int) TileStatusType.Invalid) {
                 var agent = GetComponent<Agent>();
                 var targetNode = GridManager.Instance.GetNodeForTile(tile);
 
@@ -214,11 +214,9 @@ namespace UmbraProjects.AutoChess {
 
                     targetNode.SetOccupied(true);
 
-                    GameManager.Instance.CurrentTeamSize = GridManager.Instance.GetOccupiedTiles(
-                        GridManager.Instance.Graph,
+                    _player.TeamSize.Value = GridManager.Instance.GetOccupiedTiles(GridManager.Instance.Graph,
                         GridManager.Instance.MyTiles);
-                    GameManager.Instance.AllowedAgentsText.text = $"{GameManager.Instance.CurrentTeamSize}" +
-                                                                  $"/{PlayerManager.Instance.PlayerLevel}";
+                    GameManager.Instance.AllowedAgentsText.text = $"{_player.TeamSize.Value}/{_player.TeamSize.MaxValue}";
 
                     return true;
                 }
@@ -230,7 +228,7 @@ namespace UmbraProjects.AutoChess {
         // Obtain the tile underneath the Agent
         public Tile GetTileUnder() {
             if (!IsDragging) {
-                var tile = this.gameObject.transform.parent.gameObject.GetComponent<Tile>();
+                var tile = gameObject.transform.parent.gameObject.GetComponent<Tile>();
                 return tile;
             }
             else {

@@ -22,15 +22,12 @@ namespace UmbraProjects.Utilities {
         }
 
         // Constructor requiring Value and Type. Calls "Main" constructor and sets Order and Source to default values
-        public Modifier(float value, ModifierType type) : this(value, type, (int) type, null) {
-        }
+        public Modifier(float value, ModifierType type) : this(value, type, (int) type, null) { }
 
         // Constructor requiring Value, Type, and Order. Sets Source to its default value
-        public Modifier(float value, ModifierType type, int order) : this(value, type, order, null) {
-        }
+        public Modifier(float value, ModifierType type, int order) : this(value, type, order, null) { }
 
         // Constructor requiring Value, Type, and Source. Sets Order to its default value
-        public Modifier(float value, ModifierType type, object source) : this(value, type, (int) type, source) {
-        }
+        public Modifier(float value, ModifierType type, object source) : this(value, type, (int) type, source) { }
     }
 }
