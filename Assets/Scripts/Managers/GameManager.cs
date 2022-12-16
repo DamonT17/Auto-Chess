@@ -1,14 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UmbraProjects.AutoChess.Agents;
 using UmbraProjects.AutoChess.UI;
 using UnityEngine;
-using UnityEngine.UI;
 using UmbraProjects.Managers;
-using UnityEngine.Serialization;
-using Random = System.Random;
 
 namespace UmbraProjects.AutoChess {
     // Inherited manager class to handle all overhead game states, mechanics, object generations, etc. 
@@ -33,12 +28,6 @@ namespace UmbraProjects.AutoChess {
         public UIShop AgentShop;
 
         public SpawnManager Spawn;
-
-        [Header("UI References")]
-        public Slider RoundSlider;
-        public TextMeshProUGUI RoundTimerText;
-        public TextMeshProUGUI RoundNumberText;
-        public TextMeshProUGUI AllowedAgentsText;
 
         // Variables
         public int[] GameStateBuffer; // Linear buffer of game states
@@ -77,26 +66,26 @@ namespace UmbraProjects.AutoChess {
             switch (LastGameState) {
                 case (int) GameState.Carousel:
                     SetGameState((int) GameState.Prep);
-                    AllowedAgentsText.gameObject.SetActive(true);
+                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case (int) GameState.Prep:
                     SetGameState((int) GameState.Fight);
-                    AllowedAgentsText.gameObject.SetActive(false);
+                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", true);
 
                     break;
 
                 case (int) GameState.Fight:
                     SetGameState((int) GameState.Buffer);
-                    AllowedAgentsText.gameObject.SetActive(false);
+                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case (int) GameState.Buffer:
                     SetGameState((int) GameState.Prep);
-                    AllowedAgentsText.gameObject.SetActive(true);
+                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
             }
@@ -115,7 +104,7 @@ namespace UmbraProjects.AutoChess {
         // Game state round(s) timer
         private IEnumerator GameStateTimer(int roundLength) {
             float timer = roundLength;
-            RoundSlider.maxValue = roundLength;
+            UIManager.Instance.RoundSlider.maxValue = roundLength;
 
             IsTimerActive = true;
 
@@ -123,7 +112,7 @@ namespace UmbraProjects.AutoChess {
                 yield return new WaitForEndOfFrame();
 
                 if (timer <= 0) {
-                    RoundSlider.value = RoundSlider.maxValue;
+                    UIManager.Instance.RoundSlider.value = UIManager.Instance.RoundSlider.maxValue;
                     IsTimerActive = false;
 
                     LastGameState = GetGameState();
@@ -131,8 +120,8 @@ namespace UmbraProjects.AutoChess {
                 }
 
                 timer -= Time.deltaTime;
-                RoundTimerText.text = Mathf.RoundToInt(timer).ToString();
-                RoundSlider.value = timer;
+                UIManager.Instance.RoundTimerText.text = Mathf.RoundToInt(timer).ToString();
+                UIManager.Instance.RoundSlider.value = timer;
             }
         }
 

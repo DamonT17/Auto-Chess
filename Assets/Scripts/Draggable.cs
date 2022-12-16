@@ -216,7 +216,7 @@ namespace UmbraProjects.AutoChess {
 
                     _player.TeamSize.Value = GridManager.Instance.GetOccupiedTiles(GridManager.Instance.Graph,
                         GridManager.Instance.MyTiles);
-                    GameManager.Instance.AllowedAgentsText.text = $"{_player.TeamSize.Value}/{_player.TeamSize.MaxValue}";
+                    UIManager.Instance.AllowedAgentsText.text = $"{_player.TeamSize.Value}/{_player.TeamSize.MaxValue}";
 
                     return true;
                 }

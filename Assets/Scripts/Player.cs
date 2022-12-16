@@ -12,12 +12,13 @@ using Attribute = UmbraProjects.Utilities.Attribute;
 namespace UmbraProjects.AutoChess
 {
     // Base class for Player control
-    public class Player : MonoBehaviour, IDamageable<int>, IKillable {
-        private Rigidbody _playerRb;
-        private NavMeshAgent _navMeshAgent;
+    public class Player : MonoBehaviour, IDamageable<int>, IKillable, ILeveler {
         private Animator _playerAnimator;
+        private NavMeshAgent _navMeshAgent;
+        private Rigidbody _playerRb;
         private Slider _playerSlider;
-
+        private TextMeshProUGUI _playerText;
+        
         private Vector3 _playerPosition;
         private Vector3 _targetPosition;
         
@@ -32,7 +33,9 @@ namespace UmbraProjects.AutoChess
         public Attribute Health;
         public Attribute Level;
         public Attribute Coins;
+        public Attribute ShopCost;
         public Attribute Xp;
+        public Attribute XpCost;
         public Attribute XpPerRound;
         public Attribute TeamNumber;
         public Attribute TeamSize;
@@ -40,10 +43,11 @@ namespace UmbraProjects.AutoChess
 
         // Awake is called when the script instance is being loaded
         private void Awake() {
-            _playerRb = GetComponent<Rigidbody>();
-            _navMeshAgent = GetComponent<NavMeshAgent>();
             _playerAnimator = GetComponent<Animator>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _playerRb = GetComponent<Rigidbody>();
             _playerSlider = GetComponentInChildren<Slider>();
+            _playerText = GetComponentInChildren<TextMeshProUGUI>();
             
             SetAttributes();
         }
@@ -74,6 +78,18 @@ namespace UmbraProjects.AutoChess
                 MovePlayer(_targetPosition);
             }
         }
+
+        private void OnEnable() {
+            EventManager.OnCardClick += SpendCoins;
+            EventManager.OnExperienceClick += GainXp;
+            EventManager.OnRefreshClick += SpendCoins;
+        }
+
+        private void OnDisable() {
+            EventManager.OnCardClick -= SpendCoins;
+            EventManager.OnExperienceClick -= GainXp;
+            EventManager.OnRefreshClick -= SpendCoins;
+        }
         
         // Set Player's attributes on instantiation
         private void SetAttributes() {
@@ -85,7 +101,11 @@ namespace UmbraProjects.AutoChess
 
             Coins.BaseValue = 100;  // Change to 0 on finalization of project!
 
+            ShopCost.BaseValue = 2;
+            
             Xp.BaseValue = 0;
+
+            XpCost.BaseValue = 4;
 
             XpPerRound.BaseValue = 2;
 
@@ -95,6 +115,50 @@ namespace UmbraProjects.AutoChess
             TeamSize.MaxValue = 1;
             
             MoveSpeed.BaseValue = 2.0f;
+        }
+
+        // Check if Player can afford cost of Agent or XP
+        public bool CanPlayerAfford(int amount) {
+            return amount <= Coins.Value;
+        }
+
+        // Check if Player can level up
+        private bool CanPlayerLevelUp() {
+            return Level.Value < Level.MaxValue && Xp.Value >= PlayerManager.Instance.XpPerLevel[(int) Level.Value];
+        }
+
+        // Spend an amount of coins for Agent or XP
+        public void SpendCoins(int amount) {
+            Coins.Value -= amount;
+            EventManager.OnSpendCoins?.Invoke(amount);
+        }
+
+        // Increment the Player's XP attribute
+        private void GainXp(int amount) {
+            SpendCoins(amount);
+            
+            Xp.Value += XpCost.Value;
+            EventManager.OnGainXp?.Invoke(amount);
+            
+            LevelUp();
+        }
+
+        // Increase the Player's Level attribute
+        public void LevelUp() {
+            if (!CanPlayerLevelUp()) {
+                return;
+            }
+            
+            while (Xp.Value >= PlayerManager.Instance.XpPerLevel[(int) Level.Value]) {
+                Xp.Value -= PlayerManager.Instance.XpPerLevel[(int) Level.Value];
+                Level.Value++;
+                TeamSize.MaxValue++;
+            }
+            
+            _playerAnimator.SetTrigger("CanPlayerLevelUp");
+            _playerText.text = $"{Level.Value}";
+            
+            EventManager.OnLevelUp?.Invoke((int) Level.Value);
         }
 
         public void ApplyDamage(int damageAmount) {
@@ -109,7 +173,6 @@ namespace UmbraProjects.AutoChess
             // Add code for killing of player
         }
 
-        // ABSTRACTION
         // Moves player to target destination
         private void MovePlayer(Vector3 target) {
             const float tolerance = 0.0001f;

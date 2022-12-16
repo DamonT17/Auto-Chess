@@ -43,7 +43,6 @@ namespace UmbraProjects.AutoChess.UI {
             this._agentData = agentData;
         }
 
-        // ABSTRACTION
         // Notify shop that an Agent card has been clicked (button event on card background)
         public void OnClick() {
             _agentShop.OnCardClick(this, _agentData);
