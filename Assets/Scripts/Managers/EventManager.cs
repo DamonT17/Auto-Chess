@@ -1,6 +1,5 @@
 ﻿using System;
 using UmbraProjects.AutoChess.Agents;
-using UmbraProjects.Managers;
 
 namespace UmbraProjects.AutoChess
 {

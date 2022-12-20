@@ -66,26 +66,26 @@ namespace UmbraProjects.AutoChess {
             switch (LastGameState) {
                 case (int) GameState.Carousel:
                     SetGameState((int) GameState.Prep);
-                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(true);
+                    UIManager.Instance.PlayerTeamSizeText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case (int) GameState.Prep:
                     SetGameState((int) GameState.Fight);
-                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(false);
+                    UIManager.Instance.PlayerTeamSizeText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", true);
 
                     break;
 
                 case (int) GameState.Fight:
                     SetGameState((int) GameState.Buffer);
-                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(false);
+                    UIManager.Instance.PlayerTeamSizeText.gameObject.SetActive(false);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
 
                 case (int) GameState.Buffer:
                     SetGameState((int) GameState.Prep);
-                    UIManager.Instance.AllowedAgentsText.gameObject.SetActive(true);
+                    UIManager.Instance.PlayerTeamSizeText.gameObject.SetActive(true);
                     PlayerManager.Instance.Player.GetComponent<Animator>().SetBool("IsGameStateFight", false);
                     break;
             }
@@ -138,6 +138,8 @@ namespace UmbraProjects.AutoChess {
                 }
             }
         }
+        
+        
         
         // Adds agent to player's team
         // NOTE: Need to input variable of which team to add agent to for multiplayer

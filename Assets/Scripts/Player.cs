@@ -99,7 +99,7 @@ namespace UmbraProjects.AutoChess
             Level.BaseValue = 1;
             Level.MaxValue = 11;
 
-            Coins.BaseValue = 100;  // Change to 0 on finalization of project!
+            Coins.BaseValue = 500;  // Change to 0 on finalization of project!
 
             ShopCost.BaseValue = 2;
             
@@ -140,16 +140,16 @@ namespace UmbraProjects.AutoChess
             Xp.Value += XpCost.Value;
             EventManager.OnGainXp?.Invoke(amount);
             
+            if (!CanPlayerLevelUp()) {
+                return;
+            }
+            
             LevelUp();
         }
 
         // Increase the Player's Level attribute
         public void LevelUp() {
-            if (!CanPlayerLevelUp()) {
-                return;
-            }
-            
-            while (Xp.Value >= PlayerManager.Instance.XpPerLevel[(int) Level.Value]) {
+            while ((int) Level.Value != (int) Level.MaxValue && Xp.Value >= PlayerManager.Instance.XpPerLevel[(int) Level.Value]) {
                 Xp.Value -= PlayerManager.Instance.XpPerLevel[(int) Level.Value];
                 Level.Value++;
                 TeamSize.MaxValue++;

@@ -14,10 +14,7 @@ namespace UmbraProjects.AutoChess.UI {
     public class UIShop : MonoBehaviour {
         // Assignables
         public List<UICard> CardsInShop;
-
-        public TextMeshProUGUI PlayerLevel;
-        public TextMeshProUGUI PlayerXpAmount;
-        public TextMeshProUGUI PlayerCoins;
+        
         public TextMeshProUGUI PlayerWinStreak;
         public TextMeshProUGUI RefreshCost;
         public TextMeshProUGUI ExperienceCost;
@@ -26,46 +23,28 @@ namespace UmbraProjects.AutoChess.UI {
 
         public Sprite LockSprite;
         public Sprite UnlockSprite;
-
-        public TextMeshProUGUI[] AgentRollChance = new TextMeshProUGUI[5];
-
+        
         // Variables
         private List<AgentDatabaseSO.AgentData> _cachedAgentPool;
         private List<AgentDatabaseSO.AgentData> _cachedAgentShop;
 
-        private GameObject _lockPanel;
-        private GameObject _xpPanel;
+        private Transform _lockIcon;
 
         private bool _shopLocked;
-
+        
         private readonly int _shopCostRefresh = 2;
         private readonly int _shopCostXp = 4;
 
-        private readonly int[,] _shopLevelPercentages = {
-            {100, 0, 0, 0, 0}, // Level 1
-            {100, 0, 0, 0, 0}, // Level 2
-            {75, 25, 0, 0, 0}, // Level 3
-            {55, 30, 15, 0, 0}, // Level 4
-            {45, 33, 20, 2, 0}, // Level 5
-            {25, 40, 30, 5, 0}, // Level 6
-            {19, 30, 35, 15, 1}, // Level 7
-            {16, 20, 35, 25, 4}, // Level 8
-            {9, 15, 30, 30, 16}, // Level 9 
-            {5, 10, 20, 40, 25}, // Level 10
-            {1, 2, 12, 50, 35}, // Level 11
-        };
-
         private Player _player;
+
+        // Awake is called when the script instance is being loaded
+        private void Awake() {
+            _player = PlayerManager.Instance.Player.GetComponent<Player>();
+            _lockIcon = transform.GetChild((int) UIShopPanel.LockShop).GetChild(0);
+        }
 
         // Start is called before the first frame update
         private void Start() {
-            _lockPanel = GameObject.Find("Lock/Unlock Icon");
-            _xpPanel = GameObject.Find("Buy Experience Panel");
-            _player = PlayerManager.Instance.Player.GetComponent<Player>();
-
-            PlayerLevel.text = $"Level {_player.Level.Value}";
-            PlayerXpAmount.text = null;
-            PlayerCoins.text = _player.Coins.Value.ToString();
             RefreshCost.text = _shopCostRefresh.ToString();
             ExperienceCost.text = _shopCostXp.ToString();
 
@@ -73,15 +52,11 @@ namespace UmbraProjects.AutoChess.UI {
         }
 
         private void OnEnable() {
-            EventManager.OnLevelUp += UpdatePlayerLevel;
-            EventManager.OnLevelUp += UpdateRollChance;
             
             
         }
 
         private void OnDisable() {
-            EventManager.OnLevelUp -= UpdatePlayerLevel;
-            EventManager.OnLevelUp -= UpdateRollChance;
             
             
         }
@@ -125,7 +100,7 @@ namespace UmbraProjects.AutoChess.UI {
         }
 
         // Generation of cards to appear in shop for user based off user level and tier percentages
-        private List<UICard> GenerateShop() {
+        private void GenerateShop() {
             _cachedAgentPool = GameManager.Instance.AgentPool;
             _cachedAgentShop = new List<AgentDatabaseSO.AgentData>();
 
@@ -145,8 +120,6 @@ namespace UmbraProjects.AutoChess.UI {
 
             // Remove current agents in shop from pool
             RemoveAgentsFromPool(_cachedAgentShop, GameManager.Instance.AgentPool);
-
-            return CardsInShop;
         }
         
         // Returns the cost-tier to use for random selection of Agent for the shop
@@ -361,36 +334,13 @@ namespace UmbraProjects.AutoChess.UI {
         // Unlock shop to allow refresh
         private void UnlockShop() {
             _shopLocked = false;
-            _lockPanel.GetComponent<Image>().sprite = UnlockSprite;
+            _lockIcon.GetComponentInChildren<Image>().sprite = UnlockSprite;
         }
 
         // Lock shop to disallow refresh
         private void LockShop() {
             _shopLocked = true;
-            _lockPanel.GetComponent<Image>().sprite = LockSprite;
-        }
-
-        // Update percentages of Agent roll odds for shop UI
-        public void UpdateRollChance(int level) {
-            for (var i = 0; i < AgentRollChance.Length; ++i)
-                AgentRollChance[i].text = $"{_shopLevelPercentages[level - 1, i]}%";
-        }
-
-        // Update player level for UI
-        public void UpdatePlayerLevel(int level) {
-            PlayerLevel.text = $"Level {level}";
-
-            if (level == (int) _player.Level.MaxValue) {
-                UpdatePlayerStatsAtMaxLevel();
-            }
-        }
-
-        // Update player stats at max level for UI
-        public void UpdatePlayerStatsAtMaxLevel() {
-            Button xpButton = _xpPanel.GetComponent<Button>();
-
-            PlayerXpAmount.text = $"Max level";
-            xpButton.interactable = false;
+            _lockIcon.GetComponentInChildren<Image>().sprite = LockSprite;
         }
     }
 }

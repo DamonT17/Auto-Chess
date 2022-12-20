@@ -5046,9 +5046,17 @@ MonoBehaviour:
   RoundSlider: {fileID: 1155704030}
   RoundTimerText: {fileID: 665480221}
   RoundNumberText: {fileID: 598245428}
-  AllowedAgentsText: {fileID: 1256412707}
-  CoinsText: {fileID: 1589312160}
-  XpAmountText: {fileID: 1040322539}
+  PlayerTeamSizeText: {fileID: 1256412707}
+  PlayerCoinsText: {fileID: 1589312160}
+  PlayerLevelText: {fileID: 778970598}
+  PlayerRollChance:
+  - {fileID: 2085070549}
+  - {fileID: 1828261084}
+  - {fileID: 131080625}
+  - {fileID: 196764000}
+  - {fileID: 1520271849}
+  PlayerXpButton: {fileID: 102793163}
+  PlayerXpText: {fileID: 1040322539}
 --- !u!114 &1256412707 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2416824821267399105, guid: 592d02faa242fcf46baf3c88f843a265, type: 3}
@@ -8698,21 +8706,12 @@ MonoBehaviour:
   - {fileID: 1802222256}
   - {fileID: 832251037}
   - {fileID: 488080561}
-  PlayerLevel: {fileID: 778970598}
-  PlayerXpAmount: {fileID: 1040322539}
-  PlayerCoins: {fileID: 1589312160}
   PlayerWinStreak: {fileID: 186171002}
   RefreshCost: {fileID: 1795395677}
   ExperienceCost: {fileID: 1622742930}
   SellAgentText: {fileID: 1471727469}
   LockSprite: {fileID: 21300000, guid: 314683cca5e417b43924e07f86de60c9, type: 3}
   UnlockSprite: {fileID: 21300000, guid: c6c47a3be151e3a49b453e77e8c8ad08, type: 3}
-  AgentRollChance:
-  - {fileID: 2085070549}
-  - {fileID: 1828261084}
-  - {fileID: 131080625}
-  - {fileID: 196764000}
-  - {fileID: 1520271849}
 --- !u!1001 &1937334921143505530
 PrefabInstance:
   m_ObjectHideFlags: 0
